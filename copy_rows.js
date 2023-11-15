@@ -1,25 +1,51 @@
 const ExcelJS = require("exceljs");
 const fs = require("fs").promises;
 
-async function copyRows(targetSheet, sourceSheet, from, to) {
+async function copyRows(targetSheet, sourceSheet, from, to, targetStart) {
   try {
+    let targetRowIndex = targetStart;
     for (let i = from; i <= to; i++) {
       const sourceRow = sourceSheet.getRow(i);
-      const targetRow = targetSheet.getRow(i);
+      const targetRow = targetSheet.getRow(targetRowIndex + i);
 
       targetRow.height = sourceRow.height;
       sourceRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {
         const targetCell = targetRow.getCell(colNumber);
+        if (i === from) {
+          const width = sourceSheet.getColumn(colNumber).width;
+          targetSheet.getColumn(colNumber).width = width;
+        }
 
         targetCell.style = cell.style;
         targetCell.value = cell.value;
 
         // merge cell
-        const range = `${cell.model.master || cell.address}:${
-          targetCell.address
-        }`;
-        targetSheet.unMergeCells(range);
-        targetSheet.mergeCells(range);
+        if (cell.isMerged) {
+          if (cell.master != cell) return;
+
+          let [colCount, rowCount] = [0, 0];
+
+          for (let c = cell.fullAddress.col; ; c++) {
+            const currentCell = cell.worksheet.getCell(cell.row, c);
+            if (currentCell.master != cell) break;
+
+            colCount++;
+          }
+
+          for (let r = cell.fullAddress.row; ; r++) {
+            const currentCell = cell.worksheet.getCell(r, cell.col);
+            if (currentCell.master != cell) break;
+
+            rowCount++;
+          }
+
+          targetSheet.mergeCells(
+            targetRowIndex + i,
+            colNumber,
+            targetRowIndex + i + rowCount - 1,
+            colNumber + colCount - 1
+          );
+        }
       });
     }
 
@@ -36,7 +62,7 @@ async function copyRows(targetSheet, sourceSheet, from, to) {
 async function main() {
   const startRow = parseInt(process.argv[2]);
   const endRow = parseInt(process.argv[3]);
-
+  const targetStartRow = parseInt(process.argv[4]);
   const template = await new ExcelJS.Workbook().xlsx.readFile(
     "./templates/template.xlsx"
   );
@@ -44,7 +70,7 @@ async function main() {
   const targetSheet = workbook.addWorksheet("Target Sheet");
   const sourceSheet = template.worksheets[0];
 
-  await copyRows(targetSheet, sourceSheet, startRow, endRow);
+  await copyRows(targetSheet, sourceSheet, startRow, endRow, targetStartRow);
 }
 
 main().catch((error) => console.error(error));
