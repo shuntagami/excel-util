@@ -1,6 +1,17 @@
 const ExcelJS = require("exceljs");
 const fs = require("fs").promises;
 
+/**
+ * 指定された範囲の行をソースシートからターゲットシートへコピーします。
+ * この関数は、ExcelJSライブラリを使用して、特定の範囲の行をコピーし、
+ * 指定された開始位置にそれらの行を挿入します。
+ *
+ * @param {Worksheet} targetSheet コピー先のワークシートオブジェクト
+ * @param {Worksheet} sourceSheet コピー元のワークシートオブジェクト
+ * @param {number} from コピーを開始するソースシートの行番号（開始行）
+ * @param {number} to コピーを終了するソースシートの行番号（終了行）
+ * @param {number} targetStart コピー先のワークシートでの挿入開始行番号
+ */
 async function copyRows(targetSheet, sourceSheet, from, to, targetStart) {
   try {
     let targetRowIndex = targetStart;
