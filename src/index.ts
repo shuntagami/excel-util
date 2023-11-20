@@ -1,4 +1,5 @@
-const ExcelJS = require("exceljs");
+import ExcelJS, { Anchor } from "exceljs";
+import { exit } from "process";
 const fs = require("fs").promises;
 
 /**
@@ -12,7 +13,13 @@ const fs = require("fs").promises;
  * @param {number} to コピーを終了するソースシートの行番号（終了行）
  * @param {number} targetStart コピー先のワークシートでの挿入開始行番号
  */
-async function copyRows(targetSheet, sourceSheet, from, to, targetStart) {
+async function copyRows(
+  targetSheet: ExcelJS.Worksheet,
+  sourceSheet: ExcelJS.Worksheet,
+  from: number,
+  to: number,
+  targetStart: number
+) {
   try {
     let targetRowIndex = targetStart;
     for (let i = from; i <= to; i++) {
@@ -71,15 +78,18 @@ async function copyRows(targetSheet, sourceSheet, from, to, targetStart) {
 }
 
 async function main() {
-  const startRow = parseInt(process.argv[2]);
-  const endRow = parseInt(process.argv[3]);
-  const targetStartRow = parseInt(process.argv[4]);
+  const startRow = parseInt(process.argv[2] as string);
+  const endRow = parseInt(process.argv[3] as string);
+  const targetStartRow = parseInt(process.argv[4] as string);
   const template = await new ExcelJS.Workbook().xlsx.readFile(
     "./templates/template.xlsx"
   );
   const workbook = new ExcelJS.Workbook();
   const targetSheet = workbook.addWorksheet("Target Sheet");
   const sourceSheet = template.worksheets[0];
+  if (sourceSheet === undefined) {
+    exit(1);
+  }
 
   await copyRows(targetSheet, sourceSheet, startRow, endRow, targetStartRow);
 }
