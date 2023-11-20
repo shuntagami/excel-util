@@ -1,0 +1,46 @@
+{
+  "blueprints": [
+    {
+      "id": 1,
+      "orderName": "図面2.0邸",
+      "blueprintName": "A0の図面",
+      "thumbnailUrl": "",
+      "sheets": [
+        {
+          "id": 1,
+          "sheetName": "田上電気用シートA0-1",
+          "operationCategory": "設計検査",
+          "instructions": [
+            {
+              "id": 1,
+              "displayId": 1,
+              "room": "201",
+              "part": "床",
+              "finishing": "フローリング",
+              "instruction": "傷",
+              "note": "備考（フリーワード入力）です",
+              "inspectors": "田上,上田",
+              "createdAt": "2023/11/20",
+              "completedAt": "2023/11/20",
+              "companies": ["hoge", "fuga"],
+              "coordinateGraphics": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "instructionPhotos": [
+    {
+      "id": 1,
+      "url": "",
+      "blueprintId": "",
+      "blueprintName": "",
+      "sheetId": "",
+      "sheetName": "",
+      "operationCategory": "設計検査",
+      "instructionId": "",
+      "displayId": ""
+    }
+  ]
+}

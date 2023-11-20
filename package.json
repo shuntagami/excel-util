@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node ./dist/index.js 1 33 3",
+    "dev": "node ./dist/index.js",
     "format": "prettier --write src",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier --check src",
     "prebuild": "rm -rf dist",
@@ -19,6 +19,7 @@
     "tsc-watch": "^6.0.0"
   },
   "dependencies": {
+    "dayjs": "^1.11.10",
     "exceljs": "^4.4.0"
   }
 }

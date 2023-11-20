@@ -1,15 +1,17 @@
 import ExcelJS from "exceljs";
 import { exit } from "process";
-import { copyRows } from "./utils/excel_util";
+import {
+  Blueprint,
+  ClientData,
+  InstructionSheetBuilder,
+} from "./service/InstructionSheetBuilder";
+import { writeFileSync, readFileSync } from "fs";
 
-const fs = require("fs").promises;
+// const fs = require("fs").promises;
 
 async function main() {
-  const startRow = parseInt(process.argv[2] as string);
-  const endRow = parseInt(process.argv[3] as string);
-  const targetStartRow = parseInt(process.argv[4] as string);
   const template = await new ExcelJS.Workbook().xlsx.readFile(
-    "./templates/template.xlsx"
+    "./templates/instruction.xlsx"
   );
   const workbook = new ExcelJS.Workbook();
   const targetSheet = workbook.addWorksheet("Target Sheet");
@@ -18,17 +20,36 @@ async function main() {
     exit(1);
   }
 
-  const buffer = await copyRows(
+  // JSONファイルを読み込んで型にマッピングする関数
+  const loadJsonFile = (filePath: string): ClientData | null => {
+    try {
+      const rawData = readFileSync(filePath, "utf8");
+      const data: ClientData = JSON.parse(rawData);
+      return data;
+    } catch (error) {
+      console.error("Error reading the file:", error);
+      return null;
+    }
+  };
+
+  // JSONファイルを読み込む
+  const resource = loadJsonFile("./templates/resource.json");
+
+  if (resource === null) {
+    exit(1);
+  }
+  // InstructionSheetBuilder;
+  const result = await new InstructionSheetBuilder(
+    workbook,
     targetSheet,
     sourceSheet,
-    startRow,
-    endRow,
-    targetStartRow
-  );
+    resource.blueprints
+  ).build(1);
 
-  const path = `./results/${Date.now()}.xlsx`;
-  await fs.writeFile(path, buffer);
-  console.log(`File written to ${path}`);
+  const data = new Uint8Array(await workbook.xlsx.writeBuffer());
+  const dirPath = "./results";
+  const path = [dirPath, `${Date.now()}.xlsx`].join("/");
+  writeFileSync(path, data);
 }
 
 main().catch((error) => console.error(error));
