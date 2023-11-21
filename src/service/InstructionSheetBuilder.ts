@@ -1,6 +1,12 @@
 import ExcelJS from "exceljs";
-import { copyRows } from "../utils/excel_util";
+import {
+  cellWidthHeightInPixel,
+  copyRows,
+  fetchImageAsBuffer,
+  pasteImageWithAspectRatio,
+} from "../utils/excel_util";
 import dayjs from "dayjs";
+// import sharp from "sharp";
 
 type ExportResource = {
   blueprints: Blueprint[];
@@ -57,6 +63,8 @@ type InstructionPhoto = {
 
 export class InstructionSheetBuilder {
   static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 33;
+  static readonly BLUEPRINT_IMAGE_ROW_SIZE = 29;
+  static readonly BLUEPRINT_IMAGE_COLUMN_SIZE = 8;
   static readonly INSTRUCTION_ROW_SIZE = 26;
 
   constructor(
@@ -70,14 +78,13 @@ export class InstructionSheetBuilder {
 
   async build(rowNum: number): Promise<this> {
     let currentRowNum = rowNum;
-    this.resources.forEach((blueprint) => {
-      const orderName = blueprint.orderName;
-      const blueprintName = blueprint.blueprintName;
-      const thumbnailUrl = blueprint.thumbnailUrl;
-
-      blueprint.sheets.forEach((sheet) => {
+    for (const blueprint of this.resources) {
+      for (const sheet of blueprint.sheets) {
         let nokori = InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
-        sheet.instructions.forEach(async (instruction, instruction_index) => {
+        for (const [
+          instruction_index,
+          instruction,
+        ] of sheet.instructions.entries()) {
           const amari =
             instruction_index % InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
           if (amari === 0) {
@@ -95,15 +102,19 @@ export class InstructionSheetBuilder {
             currentRowNum += 1; // テンプレートの2行目がスタート位置
             this.fillBlueprintContents(currentRowNum, blueprint, sheet);
             currentRowNum += 2; // ヘッダー分2行追加
+            await this.pasteBlueprintImage(
+              currentRowNum,
+              blueprint.thumbnailUrl
+            );
           }
           this.fillInstructionContents(currentRowNum, instruction);
           currentRowNum += 1;
           nokori = nokori - amari;
-        });
+        }
         // シート単位でテンプレートを切り替えるので残った分、currentRowNumに足す
         currentRowNum += nokori + 2;
-      });
-    });
+      }
+    }
 
     return this;
   }
@@ -125,10 +136,33 @@ export class InstructionSheetBuilder {
     currentRow.getCell("F").value = sheet.operationCategory;
     nextRow.getCell("A").value = dayjs(Date.now()).format("YYYY/MM/DD");
     nextRow.getCell("F").value = blueprint.blueprintName;
+  }
 
-    // TODO: 図面の貼り付け
-    // const instructions = sheet.instructions;
-    // instructionをループして、coordinateGraphicsを使ってsvg string組み立てて貼り付けみたいなことする必要あり。
+  // 図面のサムネ画像貼り付け
+  private async pasteBlueprintImage(currentRowNum: number, url: string) {
+    const data = await fetchImageAsBuffer(url);
+    if (data === null) return;
+
+    const imageId = this.workbook.addImage({
+      buffer: data,
+      extension: "jpeg",
+    });
+    // TODO: 画像リサイズ
+
+    const imageCell = this.workSheet.getRow(currentRowNum).getCell("A");
+    const [cellWidth, cellHeight] = cellWidthHeightInPixel(imageCell);
+
+    pasteImageWithAspectRatio(
+      this.workSheet,
+      imageCell,
+      imageId,
+      InstructionSheetBuilder.BLUEPRINT_IMAGE_COLUMN_SIZE,
+      InstructionSheetBuilder.BLUEPRINT_IMAGE_ROW_SIZE,
+      cellWidth - 100, // TODO; 余白を適切に設定
+      cellHeight - 100,
+      imageCell.fullAddress.col,
+      imageCell.fullAddress.row
+    );
   }
 
   private fillInstructionContents(

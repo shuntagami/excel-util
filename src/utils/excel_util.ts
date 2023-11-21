@@ -1,4 +1,4 @@
-import ExcelJS from "exceljs";
+import ExcelJS, { Anchor } from "exceljs";
 
 /**
  * 指定された範囲の行をソースシートからターゲットシートへコピーします。
@@ -64,4 +64,99 @@ export const copyRows = async (
       }
     });
   }
+};
+
+export const pasteImageWithAspectRatio = (
+  worksheet: ExcelJS.Worksheet,
+  cell: ExcelJS.Cell,
+  /** Workbook.addImage を呼ぶと返される */
+  imageId: number,
+  /** 画像を貼る範囲のカラム数 */
+  colCount: number,
+  /** 画像を貼る範囲の行数 */
+  rowCount: number,
+  // columnWidthP: number,
+  // rowHeightP: number,
+  imageWidthP: number,
+  imageHeightP: number,
+  colTl: number,
+  rowTl: number
+) => {
+  const [columnWidthP, rowHeightP] = cellWidthHeightInPixel(cell);
+  const [offC, offR] = [
+    (columnWidthP - imageWidthP) / 2,
+    (rowHeightP - imageHeightP) / 2,
+  ];
+
+  worksheet.addImage(imageId, {
+    tl: {
+      nativeCol: colTl - 1,
+      nativeRow: rowTl - 1,
+      nativeColOff: Math.trunc(offC * 9525), // 1pixel = 9525EMU
+      nativeRowOff: Math.trunc(offR * 9525),
+    } as Anchor,
+    // brを指定することで必ずセル内に画像が収まるようにする。但しアスペクト比が崩れる場合がある。
+    br: {
+      nativeCol: colTl - 1 + colCount,
+      nativeRow: rowTl - 1 + rowCount,
+      nativeColOff: -Math.trunc(offC * 9525), // 1pixel = 9525EMU
+      nativeRowOff: -Math.trunc(offR * 9525),
+    } as Anchor,
+  });
+};
+
+/**
+ * get the width and height in pixel for specifi cell considering merged cell.
+ */
+export const cellWidthHeightInPixel = (
+  cell: ExcelJS.Cell
+): [number, number] => {
+  const sheet = cell.worksheet;
+  let [width, height] = [0, 0];
+
+  for (let c = cell.fullAddress.col; ; c++) {
+    const currentCell = cell.worksheet.getCell(cell.fullAddress.row, c);
+    // マージの有無に関わらず、現在のセルの左上（master）が対象のセルである限り値を加算し続ける
+    if (currentCell.master != cell) break;
+
+    // 初期値から列の横幅を変えてない場合に、値が取れない可能性があるたワークシート側のプロパティも参照
+    width += sheet.getColumn(c).width || sheet.properties.defaultColWidth || 0;
+  }
+
+  for (let r = cell.fullAddress.row; ; r++) {
+    const currentCell = sheet.getCell(r, cell.col);
+
+    // マージの有無に関わらず、現在のセルの左上（master）が対象のセルである限り値を加算し続ける
+    if (currentCell.master != cell) break;
+
+    // 初期値から列の横幅を変えてない場合に、値が取れない可能性があるたワークシート側のプロパティも参照
+    height += sheet.getRow(r).height || sheet.properties.defaultRowHeight || 0;
+  }
+  return [columnWidthInPixel(width), rowHeightInPixel(height)];
+};
+
+/**
+ * get the column width in pixel.
+ */
+const columnWidthInPixel = (width: number, fontWidth = 8) => {
+  return ((256 * width + 128 / fontWidth) / 256) * fontWidth;
+};
+
+/**
+ * get the row height in pixel.
+ */
+const rowHeightInPixel = (height: number) => {
+  //  Pixels DPI (96 pixels per inch), Points DPI (72 points per inch)
+  return (height * 96) / 72;
+};
+
+export const fetchImageAsBuffer = async (
+  imageUrl: string
+): Promise<Buffer | null> => {
+  const response = await fetch(imageUrl);
+  if (!response.ok) {
+    return null;
+  }
+  const arrayBuffer = await response.arrayBuffer();
+  return Buffer.from(arrayBuffer);
 };
