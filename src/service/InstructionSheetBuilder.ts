@@ -6,7 +6,7 @@ import {
   pasteImageWithAspectRatio,
 } from "../utils/excel_util";
 import dayjs from "dayjs";
-// import sharp from "sharp";
+import sharp from "sharp";
 
 type ExportResource = {
   blueprints: Blueprint[];
@@ -68,16 +68,21 @@ export class InstructionSheetBuilder {
   static readonly INSTRUCTION_ROW_SIZE = 26;
 
   constructor(
-    private readonly workbook: ExcelJS.Workbook,
-    private readonly workSheet: ExcelJS.Worksheet,
+    public readonly workbook: ExcelJS.Workbook,
+    public readonly workSheet: ExcelJS.Worksheet,
     private readonly templateSheet: ExcelJS.Worksheet,
     private readonly resources: Blueprint[]
   ) {
     this.workSheet.pageSetup = this.templateSheet.pageSetup;
   }
 
-  async build(rowNum: number): Promise<this> {
+  async build(
+    rowNum: number,
+    marginWidth = 100,
+    marginHeight = 100
+  ): Promise<this> {
     let currentRowNum = rowNum;
+    // TODO: 図面を渡さなくても、orderame, bluerpintName, thumbnailUrlだけ外から渡せば良さそう
     for (const blueprint of this.resources) {
       for (const sheet of blueprint.sheets) {
         let nokori = InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
@@ -104,7 +109,9 @@ export class InstructionSheetBuilder {
             currentRowNum += 2; // ヘッダー分2行追加
             await this.pasteBlueprintImage(
               currentRowNum,
-              blueprint.thumbnailUrl
+              blueprint.thumbnailUrl,
+              marginWidth,
+              marginHeight
             );
           }
           this.fillInstructionContents(currentRowNum, instruction);
@@ -139,30 +146,45 @@ export class InstructionSheetBuilder {
   }
 
   // 図面のサムネ画像貼り付け
-  private async pasteBlueprintImage(currentRowNum: number, url: string) {
+  private async pasteBlueprintImage(
+    currentRowNum: number,
+    url: string,
+    marginWidth: number,
+    marginHeight: number
+  ) {
     const data = await fetchImageAsBuffer(url);
     if (data === null) return;
+
+    const imageCell = this.workSheet.getRow(currentRowNum).getCell("A");
+    const [cellWidth, cellHeight] = cellWidthHeightInPixel(imageCell);
+    const sharped = await this.resizeImage(
+      data,
+      cellWidth - marginWidth,
+      cellHeight - marginHeight
+    );
 
     const imageId = this.workbook.addImage({
       buffer: data,
       extension: "jpeg",
     });
-    // TODO: 画像リサイズ
-
-    const imageCell = this.workSheet.getRow(currentRowNum).getCell("A");
-    const [cellWidth, cellHeight] = cellWidthHeightInPixel(imageCell);
-
     pasteImageWithAspectRatio(
       this.workSheet,
       imageCell,
       imageId,
       InstructionSheetBuilder.BLUEPRINT_IMAGE_COLUMN_SIZE,
       InstructionSheetBuilder.BLUEPRINT_IMAGE_ROW_SIZE,
-      cellWidth - 100, // TODO; 余白を適切に設定
-      cellHeight - 100,
+      cellWidth - marginWidth, // TODO; 余白を適切に設定
+      cellHeight - marginHeight,
       imageCell.fullAddress.col,
       imageCell.fullAddress.row
     );
+  }
+
+  private async resizeImage(buffer: Buffer, width: number, height: number) {
+    return await sharp(buffer)
+      .resize(Math.trunc(width), Math.trunc(height), { fit: "inside" })
+      .jpeg({ mozjpeg: true })
+      .toBuffer();
   }
 
   private fillInstructionContents(
