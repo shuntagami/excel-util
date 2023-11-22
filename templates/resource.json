@@ -23,7 +23,81 @@
               "createdAt": "2023/11/20",
               "completedAt": "2023/11/20",
               "companies": ["hoge", "fuga"],
-              "coordinateGraphics": ""
+              "coordinateGraphics": "",
+              "photos": [
+                {
+                  "id": 1,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 2,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 3,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 4,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 5,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 6,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 7,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "displayId": 2,
+              "room": "201",
+              "part": "床",
+              "finishing": "フローリング",
+              "instruction": "傷",
+              "note": "備考（フリーワード入力）です",
+              "inspectors": "田上,上田",
+              "createdAt": "2023/11/20",
+              "completedAt": "2023/11/20",
+              "companies": ["hoge", "fuga"],
+              "coordinateGraphics": "",
+              "photos": [
+                {
+                  "id": 1,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 2,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 3,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 4,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 5,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 6,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 7,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                }
+              ]
             }
           ]
         },
@@ -44,7 +118,37 @@
               "createdAt": "2023/11/20",
               "completedAt": "2023/11/20",
               "companies": ["hoge", "fuga"],
-              "coordinateGraphics": ""
+              "coordinateGraphics": "",
+              "photos": [
+                {
+                  "id": 8,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 9,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 10,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 11,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 12,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 13,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 14,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                }
+              ]
             }
           ]
         }
@@ -73,7 +177,37 @@
               "createdAt": "2023/11/20",
               "completedAt": "2023/11/20",
               "companies": ["hoge", "fuga"],
-              "coordinateGraphics": ""
+              "coordinateGraphics": "",
+              "photos": [
+                {
+                  "id": 8,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 9,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 10,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 11,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 12,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 13,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 14,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                }
+              ]
             }
           ]
         },
@@ -94,24 +228,41 @@
               "createdAt": "2023/11/20",
               "completedAt": "2023/11/20",
               "companies": ["hoge", "fuga"],
-              "coordinateGraphics": ""
+              "coordinateGraphics": "",
+              "photos": [
+                {
+                  "id": 8,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 9,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 10,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 11,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 12,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 13,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                },
+                {
+                  "id": 14,
+                  "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
+                }
+              ]
             }
           ]
         }
       ]
-    }
-  ],
-  "instructionPhotos": [
-    {
-      "id": 1,
-      "url": "",
-      "blueprintId": "",
-      "blueprintName": "",
-      "sheetId": "",
-      "sheetName": "",
-      "operationCategory": "設計検査",
-      "instructionId": "",
-      "displayId": ""
     }
   ]
 }

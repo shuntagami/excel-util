@@ -27,7 +27,7 @@ export type Blueprint = {
   sheets: Sheet[];
 };
 
-type Sheet = {
+export type Sheet = {
   id: number;
   sheetName: string;
   operationCategory: string;
@@ -47,18 +47,12 @@ type Instruction = {
   completedAt: string;
   clientName: string;
   coordinateGraphics: string;
+  photos: InstructionPhoto[];
 };
 
 type InstructionPhoto = {
   id: number;
   url: string;
-  blueprintId: string;
-  blueprintName: string;
-  sheetId: string;
-  sheetName: string;
-  operationCategory: string;
-  instructionId: string;
-  displayId: string;
 };
 
 export class InstructionSheetBuilder {

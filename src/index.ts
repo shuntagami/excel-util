@@ -6,6 +6,7 @@ import {
   InstructionSheetBuilder,
 } from "./service/InstructionSheetBuilder";
 import { writeFileSync, readFileSync } from "fs";
+import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBuilder";
 
 // const fs = require("fs").promises;
 
@@ -15,8 +16,10 @@ async function main() {
   );
   const workbook = new ExcelJS.Workbook();
   const targetSheet = workbook.addWorksheet("Target Sheet");
+  const targetPhotoSheet = workbook.addWorksheet("Target Photo Sheet");
   const sourceSheet = template.worksheets[0];
-  if (sourceSheet === undefined) {
+  const sourcePhotoSheet = template.worksheets[1];
+  if (sourceSheet === undefined || sourcePhotoSheet === undefined) {
     exit(1);
   }
 
@@ -43,6 +46,13 @@ async function main() {
     workbook,
     targetSheet,
     sourceSheet,
+    resource.blueprints
+  ).build(1);
+
+  await new InstructionPhotoSheetBuilder(
+    workbook,
+    targetPhotoSheet,
+    sourcePhotoSheet,
     resource.blueprints
   ).build(1);
 
