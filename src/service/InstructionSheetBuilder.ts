@@ -51,7 +51,7 @@ type Instruction = {
 };
 
 type InstructionPhoto = {
-  id: number;
+  displayId: number;
   url: string;
 };
 

@@ -63,6 +63,7 @@ export class InstructionPhotoSheetBuilder {
             this.fillInstructionContents(
               currentRowNum,
               instruction.displayId,
+              photo.displayId,
               photoIndex
             );
             await this.pasteInstructionPhoto(
@@ -101,6 +102,7 @@ export class InstructionPhotoSheetBuilder {
   private fillInstructionContents(
     rowNum: number,
     displayId: number,
+    photoDisplayId: number,
     photoIndex: number
   ) {
     const columnMapping = ["A", "H", "O"];
@@ -109,7 +111,7 @@ export class InstructionPhotoSheetBuilder {
       columnMapping[
         photoIndex % InstructionPhotoSheetBuilder.HORIZONTAL_PHOTO_COUNT
       ] as string
-    ).value = `${displayId}-${photoIndex + 1}`; // photoIndexは0スタートなので+1
+    ).value = `${displayId}-${photoDisplayId}`;
   }
 
   private async pasteInstructionPhoto(
