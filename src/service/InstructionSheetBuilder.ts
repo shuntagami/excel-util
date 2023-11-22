@@ -62,7 +62,7 @@ type InstructionPhoto = {
 };
 
 export class InstructionSheetBuilder {
-  static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 33;
+  static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 32;
   static readonly BLUEPRINT_IMAGE_ROW_SIZE = 29;
   static readonly BLUEPRINT_IMAGE_COLUMN_SIZE = 8;
   static readonly INSTRUCTION_ROW_SIZE = 26;
