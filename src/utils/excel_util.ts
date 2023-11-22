@@ -1,4 +1,5 @@
 import ExcelJS, { Anchor } from "exceljs";
+import sharp from "sharp";
 
 /**
  * 指定された範囲の行をソースシートからターゲットシートへコピーします。
@@ -159,4 +160,15 @@ export const fetchImageAsBuffer = async (
   }
   const arrayBuffer = await response.arrayBuffer();
   return Buffer.from(arrayBuffer);
+};
+
+export const resizeImage = async (
+  buffer: Buffer,
+  width: number,
+  height: number
+) => {
+  return await sharp(buffer)
+    .resize(Math.trunc(width), Math.trunc(height), { fit: "inside" })
+    .jpeg({ mozjpeg: true })
+    .toBuffer();
 };

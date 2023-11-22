@@ -4,9 +4,9 @@ import {
   copyRows,
   fetchImageAsBuffer,
   pasteImageWithAspectRatio,
+  resizeImage,
 } from "../utils/excel_util";
 import dayjs from "dayjs";
-import sharp from "sharp";
 
 type ExportResource = {
   blueprints: Blueprint[];
@@ -157,14 +157,14 @@ export class InstructionSheetBuilder {
 
     const imageCell = this.workSheet.getRow(currentRowNum).getCell("A");
     const [cellWidth, cellHeight] = cellWidthHeightInPixel(imageCell);
-    const sharped = await this.resizeImage(
+    const sharped = await resizeImage(
       data,
       cellWidth - marginWidth,
       cellHeight - marginHeight
     );
 
     const imageId = this.workbook.addImage({
-      buffer: data,
+      buffer: sharped,
       extension: "jpeg",
     });
     pasteImageWithAspectRatio(
@@ -178,13 +178,6 @@ export class InstructionSheetBuilder {
       imageCell.fullAddress.col,
       imageCell.fullAddress.row
     );
-  }
-
-  private async resizeImage(buffer: Buffer, width: number, height: number) {
-    return await sharp(buffer)
-      .resize(Math.trunc(width), Math.trunc(height), { fit: "inside" })
-      .jpeg({ mozjpeg: true })
-      .toBuffer();
   }
 
   private fillInstructionContents(
