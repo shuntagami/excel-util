@@ -28,10 +28,10 @@ export const copyRows = async (
     targetRow.height = sourceRow.height;
     sourceRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {
       const targetCell = targetRow.getCell(colNumber);
-      if (i === from) {
-        const width = sourceSheet.getColumn(colNumber).width;
-        targetSheet.getColumn(colNumber).width = width;
-      }
+      const width =
+        sourceSheet.getColumn(colNumber).width ||
+        sourceSheet.properties.defaultColWidth;
+      targetSheet.getColumn(colNumber).width = width;
 
       targetCell.style = cell.style;
       targetCell.value = cell.value;
