@@ -46,7 +46,7 @@ export class InstructionSheetBuilder {
               currentRowNum += 3; // 指摘項目の最後の段の空欄分
               addPageBreak(this.workSheet, currentRowNum);
             }
-            // テンプレートをコピー
+
             copyRows(
               this.workSheet,
               this.templateSheet,
@@ -103,7 +103,6 @@ export class InstructionSheetBuilder {
     nextRow.getCell("F").value = blueprintName + ":" + sheetName;
   }
 
-  // 図面のサムネ画像貼り付け
   private async pasteBlueprintImage(
     currentRowNum: number,
     url: string,
@@ -131,7 +130,7 @@ export class InstructionSheetBuilder {
       imageId,
       InstructionSheetBuilder.BLUEPRINT_IMAGE_COLUMN_SIZE,
       InstructionSheetBuilder.BLUEPRINT_IMAGE_ROW_SIZE,
-      cellWidth - marginWidth, // TODO; 余白を適切に設定
+      cellWidth - marginWidth,
       cellHeight - marginHeight,
       imageCell.fullAddress.col,
       imageCell.fullAddress.row

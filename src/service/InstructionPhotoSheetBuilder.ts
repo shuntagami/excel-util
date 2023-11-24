@@ -99,8 +99,6 @@ export class InstructionPhotoSheetBuilder {
             currentRowNum += 14;
           }
         }
-        // add page break
-        // addPageBreak(this.workSheet, currentRowNum);
       }
     }
     return this;

@@ -5,8 +5,6 @@ import { writeFileSync, readFileSync } from "fs";
 import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBuilder";
 import { ClientData } from "./types/InstructionResource";
 
-// const fs = require("fs").promises;
-
 async function main() {
   const template = await new ExcelJS.Workbook().xlsx.readFile(
     "./templates/instruction3.xlsx"
