@@ -26,8 +26,8 @@ export type Instruction = {
   finishing: string;
   instruction: string;
   note: string;
-  clientNames: string;
-  inspectors: string;
+  clientNames: string[];
+  inspectors: string[];
   createdAt: string;
   completedAt: string;
   coordinateGraphics: string;

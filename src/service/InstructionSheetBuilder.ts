@@ -147,8 +147,8 @@ export class InstructionSheetBuilder {
     currentRow.getCell("K").value = instruction.part;
     currentRow.getCell("L").value = instruction.finishing;
     currentRow.getCell("M").value = instruction.instruction;
-    currentRow.getCell("N").value = instruction.clientNames;
-    currentRow.getCell("O").value = instruction.inspectors;
+    currentRow.getCell("N").value = instruction.clientNames.join(",");
+    currentRow.getCell("O").value = instruction.inspectors.join(",");
     currentRow.getCell("P").value = instruction.createdAt;
     currentRow.getCell("Q").value = instruction.completedAt;
     currentRow.getCell("R").value = instruction.note;
