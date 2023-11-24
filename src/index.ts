@@ -12,7 +12,7 @@ import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBui
 
 async function main() {
   const template = await new ExcelJS.Workbook().xlsx.readFile(
-    "./templates/instruction.xlsx"
+    "./templates/instruction3.xlsx"
   );
   const workbook = new ExcelJS.Workbook();
   const targetSheet = workbook.addWorksheet("Target Sheet");
@@ -41,8 +41,7 @@ async function main() {
   if (resource === null) {
     exit(1);
   }
-  // InstructionSheetBuilder;
-  const result = await new InstructionSheetBuilder(
+  await new InstructionSheetBuilder(
     workbook,
     targetSheet,
     sourceSheet,
