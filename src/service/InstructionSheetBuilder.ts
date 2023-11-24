@@ -14,7 +14,7 @@ export class InstructionSheetBuilder {
   static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 32;
   static readonly BLUEPRINT_IMAGE_ROW_SIZE = 29;
   static readonly BLUEPRINT_IMAGE_COLUMN_SIZE = 8;
-  static readonly INSTRUCTION_ROW_SIZE = 26;
+  static readonly INSTRUCTION_ROW_SIZE = 29;
 
   constructor(
     public readonly workbook: ExcelJS.Workbook,
@@ -43,7 +43,6 @@ export class InstructionSheetBuilder {
             instructionIndex % InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
           if (amari === 0) {
             if (currentRowNum !== 1) {
-              currentRowNum += 3; // 指摘項目の最後の段の空欄分
               addPageBreak(this.workSheet, currentRowNum);
             }
 

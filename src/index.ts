@@ -50,7 +50,7 @@ const loadJsonFile = (filePath: string): ClientData | ClientData[] | null => {
 
 async function main() {
   const template = await new ExcelJS.Workbook().xlsx.readFile(
-    "./templates/instruction3.xlsx"
+    "./templates/instruction.xlsx"
   );
   const sourceSheet = template.worksheets[0];
   const sourcePhotoSheet = template.worksheets[1];
