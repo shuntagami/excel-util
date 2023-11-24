@@ -9,34 +9,43 @@ import {
 } from "./types/InstructionResource";
 
 const processInstructionResource = async (
-  InstructionResource: InstructionResource,
-  sourceSheet: ExcelJS.Worksheet,
-  sourcePhotoSheet: ExcelJS.Worksheet
+  instructionResource: InstructionResource,
+  instructionSheetName: string,
+  photoSheetName: string
 ) => {
   const workbook = new ExcelJS.Workbook();
-  const targetSheet = workbook.addWorksheet("Target Sheet", { views: [{}] });
-  const targetPhotoSheet = workbook.addWorksheet("Target Photo Sheet", {
+  const targetSheet = workbook.addWorksheet(instructionSheetName, {
     views: [{}],
   });
+  const targetPhotoSheet = workbook.addWorksheet(photoSheetName, {
+    views: [{}],
+  });
+
+  const template = await new ExcelJS.Workbook().xlsx.readFile(
+    "./templates/instruction.xlsx"
+  );
+  const sourceSheet = template.worksheets[0];
+  const sourcePhotoSheet = template.worksheets[1];
+  if (sourceSheet === undefined || sourcePhotoSheet === undefined) {
+    exit(1);
+  }
 
   await new InstructionSheetBuilder(
     workbook,
     targetSheet,
     sourceSheet,
-    InstructionResource.blueprints
+    instructionResource.blueprints
   ).build(1);
 
   await new InstructionPhotoSheetBuilder(
     workbook,
     targetPhotoSheet,
     sourcePhotoSheet,
-    InstructionResource.blueprints
+    instructionResource.blueprints
   ).build(1);
 
   const data = new Uint8Array(await workbook.xlsx.writeBuffer());
-  const dirPath = "./results";
-  const path = [dirPath, `${Date.now()}.xlsx`].join("/");
-  writeFileSync(path, data);
+  return data;
 };
 
 const loadJson = (
@@ -59,34 +68,37 @@ const isInstructionResourceByClient = (
   return resource && "resources" in resource;
 };
 
-async function main() {
-  const template = await new ExcelJS.Workbook().xlsx.readFile(
-    "./templates/instruction.xlsx"
-  );
-  const sourceSheet = template.worksheets[0];
-  const sourcePhotoSheet = template.worksheets[1];
-  if (sourceSheet === undefined || sourcePhotoSheet === undefined) {
-    exit(1);
-  }
+const saveToTmpDir = (fileName: string, data: Uint8Array) => {
+  const dirPath = "./results";
+  const path = [dirPath, fileName].join("/");
+  writeFileSync(path, data);
+};
 
+async function main() {
   // JSONファイルを読み込む
   const resource: InstructionResource | InstructionResourceByClient | null =
     loadJson("./templates/resource_by_client.json");
-
   if (resource === null) {
     exit(1);
   }
 
   if (isInstructionResourceByClient(resource)) {
-    for (const InstructionResource of resource.resources) {
-      await processInstructionResource(
-        InstructionResource,
-        sourceSheet,
-        sourcePhotoSheet
+    for (const instructionResource of resource.resources) {
+      const clientName = instructionResource.clientName;
+      const data = await processInstructionResource(
+        instructionResource,
+        "指摘一覧",
+        "写真一覧"
       );
+      saveToTmpDir(`${clientName}_${Date.now()}.xlsx`, data);
     }
   } else {
-    await processInstructionResource(resource, sourceSheet, sourcePhotoSheet);
+    const data = await processInstructionResource(
+      resource,
+      "指摘一覧",
+      "写真一覧"
+    );
+    saveToTmpDir(`${Date.now()}.xlsx`, data);
   }
 }
 
