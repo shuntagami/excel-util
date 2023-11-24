@@ -82,11 +82,11 @@ export class InstructionSheetBuilder {
       for (const sheet of blueprint.sheets) {
         let nokori = InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
         for (const [
-          instruction_index,
+          instructionIndex,
           instruction,
         ] of sheet.instructions.entries()) {
           const amari =
-            instruction_index % InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
+            instructionIndex % InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
           if (amari === 0) {
             if (currentRowNum !== 1) {
               currentRowNum += 3; // 指摘項目の最後の段の空欄分
