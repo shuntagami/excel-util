@@ -112,7 +112,7 @@ export class InstructionSheetBuilder {
           }
           this.fillInstructionContents(currentRowNum, instruction);
           currentRowNum += 1;
-          nokori = nokori - amari;
+          nokori = InstructionSheetBuilder.INSTRUCTION_ROW_SIZE - amari;
         }
         // シート単位でテンプレートを切り替えるので残った分、currentRowNumに足す
         currentRowNum += nokori;
