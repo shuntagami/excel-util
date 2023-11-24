@@ -3,10 +3,13 @@ import { exit } from "process";
 import { InstructionSheetBuilder } from "./service/InstructionSheetBuilder";
 import { writeFileSync, readFileSync } from "fs";
 import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBuilder";
-import { ClientData } from "./types/InstructionResource";
+import {
+  InstructionResource,
+  InstructionResourceByClient,
+} from "./types/InstructionResource";
 
-const processClientData = async (
-  clientData: ClientData,
+const processInstructionResource = async (
+  InstructionResource: InstructionResource,
   sourceSheet: ExcelJS.Worksheet,
   sourcePhotoSheet: ExcelJS.Worksheet
 ) => {
@@ -20,14 +23,14 @@ const processClientData = async (
     workbook,
     targetSheet,
     sourceSheet,
-    clientData.blueprints
+    InstructionResource.blueprints
   ).build(1);
 
   await new InstructionPhotoSheetBuilder(
     workbook,
     targetPhotoSheet,
     sourcePhotoSheet,
-    clientData.blueprints
+    InstructionResource.blueprints
   ).build(1);
 
   const data = new Uint8Array(await workbook.xlsx.writeBuffer());
@@ -36,16 +39,24 @@ const processClientData = async (
   writeFileSync(path, data);
 };
 
-// JSONファイルを読み込んで型にマッピングする関数
-const loadJsonFile = (filePath: string): ClientData | ClientData[] | null => {
+const loadJson = (
+  filePath: string
+): InstructionResource | InstructionResourceByClient | null => {
   try {
     const rawData = readFileSync(filePath, "utf8");
-    const data: ClientData | ClientData[] = JSON.parse(rawData);
+    const data: InstructionResource | InstructionResourceByClient =
+      JSON.parse(rawData);
     return data;
   } catch (error) {
     console.error("Error reading the file:", error);
     return null;
   }
+};
+
+const isInstructionResourceByClient = (
+  resource: any
+): resource is InstructionResourceByClient => {
+  return resource && "resources" in resource;
 };
 
 async function main() {
@@ -59,18 +70,23 @@ async function main() {
   }
 
   // JSONファイルを読み込む
-  const resource = loadJsonFile("./templates/resource.json");
+  const resource: InstructionResource | InstructionResourceByClient | null =
+    loadJson("./templates/resource_by_client.json");
 
   if (resource === null) {
     exit(1);
   }
 
-  if (Array.isArray(resource)) {
-    for (const clientData of resource) {
-      await processClientData(clientData, sourceSheet, sourcePhotoSheet);
+  if (isInstructionResourceByClient(resource)) {
+    for (const InstructionResource of resource.resources) {
+      await processInstructionResource(
+        InstructionResource,
+        sourceSheet,
+        sourcePhotoSheet
+      );
     }
   } else {
-    await processClientData(resource, sourceSheet, sourcePhotoSheet);
+    await processInstructionResource(resource, sourceSheet, sourcePhotoSheet);
   }
 }
 

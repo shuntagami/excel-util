@@ -1,5 +1,13 @@
-export type ClientData = {
-  clientName?: string;
+// 業者ごとの出力resource
+export type InstructionResourceByClient = {
+  exportId: number;
+  resources: InstructionResource[];
+};
+
+// 業者ごとでない出力resoure
+export type InstructionResource = {
+  exportId?: number; // 業者ごとじゃない時だけ入る
+  clientName?: string; // 業者ごとの出力の時だけ入る
   blueprints: Blueprint[];
 };
 
