@@ -53,7 +53,7 @@ export class InstructionPhotoSheetBuilder {
                 currentRowNum - 1
               );
               if (currentRowNum !== 1) {
-                addPageBreak(this.workSheet, currentRowNum);
+                addPageBreak(this.workSheet, currentRowNum - 1);
               }
               currentRowNum += 1; // テンプレートの2行目がスタート位置
               this.fillBlueprintContents(

@@ -43,7 +43,7 @@ export class InstructionSheetBuilder {
             instructionIndex % InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
           if (amari === 0) {
             if (currentRowNum !== 1) {
-              addPageBreak(this.workSheet, currentRowNum);
+              addPageBreak(this.workSheet, currentRowNum - 1);
             }
 
             copyRows(
