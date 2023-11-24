@@ -8,53 +8,7 @@ import {
   resizeImage,
 } from "../utils/excel_util";
 import dayjs from "dayjs";
-
-type ExportResource = {
-  blueprints: Blueprint[];
-  instructionPhotos: InstructionPhoto[];
-};
-
-export type ClientData = {
-  clientName: string;
-  blueprints: Blueprint[];
-  instructionPhotos: InstructionPhoto[];
-};
-
-export type Blueprint = {
-  id: number;
-  orderName: string;
-  blueprintName: string;
-  thumbnailUrl: string;
-  sheets: Sheet[];
-};
-
-export type Sheet = {
-  id: number;
-  sheetName: string;
-  operationCategory: string;
-  instructions: Instruction[];
-};
-
-type Instruction = {
-  id: number;
-  displayId: number;
-  room: string;
-  part: string;
-  finishing: string;
-  instruction: string;
-  note: string;
-  inspectors: string;
-  createdAt: string;
-  completedAt: string;
-  clientName: string;
-  coordinateGraphics: string;
-  photos: InstructionPhoto[];
-};
-
-type InstructionPhoto = {
-  displayId: number;
-  url: string;
-};
+import { Blueprint, Instruction } from "../types/InstructionResource";
 
 export class InstructionSheetBuilder {
   static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 32;
@@ -101,7 +55,13 @@ export class InstructionSheetBuilder {
               currentRowNum - 1
             );
             currentRowNum += 1; // テンプレートの2行目がスタート位置
-            this.fillBlueprintContents(currentRowNum, blueprint, sheet);
+            this.fillBlueprintContents(
+              currentRowNum,
+              blueprint.orderName,
+              blueprint.blueprintName,
+              sheet.operationCategory,
+              sheet.sheetName
+            );
             currentRowNum += 2; // ヘッダー分2行追加
             await this.pasteBlueprintImage(
               currentRowNum,
@@ -129,17 +89,18 @@ export class InstructionSheetBuilder {
   // 図面の画像
   private fillBlueprintContents(
     currentRowNum: number,
-    blueprint: Blueprint,
-    sheet: Sheet
+    orderName: string,
+    blueprintName: string,
+    operationCategory: string,
+    sheetName: string
   ) {
     const currentRow = this.workSheet.getRow(currentRowNum);
     const nextRow = this.workSheet.getRow(currentRowNum + 1);
 
-    currentRow.getCell("A").value = blueprint.orderName;
-    currentRow.getCell("F").value = sheet.operationCategory;
+    currentRow.getCell("A").value = orderName;
+    currentRow.getCell("F").value = operationCategory;
     nextRow.getCell("A").value = dayjs(Date.now()).format("YYYY/MM/DD");
-    nextRow.getCell("F").value =
-      blueprint.blueprintName + ":" + sheet.sheetName;
+    nextRow.getCell("F").value = blueprintName + ":" + sheetName;
   }
 
   // 図面のサムネ画像貼り付け

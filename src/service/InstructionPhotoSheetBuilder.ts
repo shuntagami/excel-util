@@ -1,5 +1,5 @@
 import ExcelJS from "exceljs";
-import { Blueprint, Sheet } from "./InstructionSheetBuilder";
+import { Blueprint } from "../types/InstructionResource";
 import {
   addPageBreak,
   cellWidthHeightInPixel,
@@ -56,7 +56,13 @@ export class InstructionPhotoSheetBuilder {
                 addPageBreak(this.workSheet, currentRowNum);
               }
               currentRowNum += 1; // テンプレートの2行目がスタート位置
-              this.fillBlueprintContents(currentRowNum, blueprint, sheet);
+              this.fillBlueprintContents(
+                currentRowNum,
+                blueprint.orderName,
+                blueprint.blueprintName,
+                sheet.operationCategory,
+                sheet.sheetName
+              );
               currentRowNum += 2; // ヘッダー分2行追加
             }
 
@@ -102,13 +108,15 @@ export class InstructionPhotoSheetBuilder {
 
   private fillBlueprintContents(
     rowNum: number,
-    blueprint: Blueprint,
-    sheet: Sheet
+    orderName: string,
+    blueprintName: string,
+    operationCategory: string,
+    sheetName: string
   ) {
     const row = this.workSheet.getRow(rowNum);
-    row.getCell("A").value = blueprint.orderName;
-    row.getCell("I").value = sheet.operationCategory;
-    row.getCell("Q").value = blueprint.blueprintName + ":" + sheet.sheetName;
+    row.getCell("A").value = orderName;
+    row.getCell("I").value = operationCategory;
+    row.getCell("Q").value = blueprintName + ":" + sheetName;
   }
 
   private fillInstructionContents(

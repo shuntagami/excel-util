@@ -1,12 +1,9 @@
 import ExcelJS from "exceljs";
 import { exit } from "process";
-import {
-  Blueprint,
-  ClientData,
-  InstructionSheetBuilder,
-} from "./service/InstructionSheetBuilder";
+import { InstructionSheetBuilder } from "./service/InstructionSheetBuilder";
 import { writeFileSync, readFileSync } from "fs";
 import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBuilder";
+import { ClientData } from "./types/InstructionResource";
 
 // const fs = require("fs").promises;
 
