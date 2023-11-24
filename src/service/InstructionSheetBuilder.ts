@@ -136,7 +136,8 @@ export class InstructionSheetBuilder {
     currentRow.getCell("A").value = blueprint.orderName;
     currentRow.getCell("F").value = sheet.operationCategory;
     nextRow.getCell("A").value = dayjs(Date.now()).format("YYYY/MM/DD");
-    nextRow.getCell("F").value = blueprint.blueprintName;
+    nextRow.getCell("F").value =
+      blueprint.blueprintName + ":" + sheet.sheetName;
   }
 
   // 図面のサムネ画像貼り付け

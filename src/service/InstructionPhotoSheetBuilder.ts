@@ -96,7 +96,7 @@ export class InstructionPhotoSheetBuilder {
     const row = this.workSheet.getRow(rowNum);
     row.getCell("A").value = blueprint.orderName;
     row.getCell("I").value = sheet.operationCategory;
-    row.getCell("Q").value = blueprint.blueprintName;
+    row.getCell("Q").value = blueprint.blueprintName + ":" + sheet.sheetName;
   }
 
   private fillInstructionContents(
