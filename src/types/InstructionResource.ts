@@ -1,5 +1,5 @@
 export type ClientData = {
-  clientName: string;
+  clientName?: string;
   blueprints: Blueprint[];
 };
 
