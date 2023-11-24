@@ -10,6 +10,7 @@ import {
 } from "../utils/excel_util";
 
 export class InstructionPhotoSheetBuilder {
+  static readonly PHOTO_TEMPLATE_ROW_SIZE = 32;
   static readonly VERTICAL_PHOTO_COUNT = 2;
   static readonly HORIZONTAL_PHOTO_COUNT = 3;
   static readonly TOTAL_PHOTO_COUNT_PER_TEMPLATE =
@@ -48,7 +49,7 @@ export class InstructionPhotoSheetBuilder {
                 this.workSheet,
                 this.templateSheet,
                 1,
-                32,
+                InstructionPhotoSheetBuilder.PHOTO_TEMPLATE_ROW_SIZE,
                 currentRowNum - 1
               );
               if (currentRowNum !== 1) {
@@ -86,7 +87,7 @@ export class InstructionPhotoSheetBuilder {
           photoIndexBySheet %
           InstructionPhotoSheetBuilder.TOTAL_PHOTO_COUNT_PER_TEMPLATE;
         if (temp !== 0) {
-          if (temp <= 3) {
+          if (temp <= InstructionPhotoSheetBuilder.HORIZONTAL_PHOTO_COUNT) {
             currentRowNum += 28;
           } else {
             currentRowNum += 14;
