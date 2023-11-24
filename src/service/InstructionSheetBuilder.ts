@@ -1,5 +1,6 @@
 import ExcelJS from "exceljs";
 import {
+  addPageBreak,
   cellWidthHeightInPixel,
   copyRows,
   fetchImageAsBuffer,
@@ -56,7 +57,7 @@ type InstructionPhoto = {
 };
 
 export class InstructionSheetBuilder {
-  static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 31;
+  static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 32;
   static readonly BLUEPRINT_IMAGE_ROW_SIZE = 29;
   static readonly BLUEPRINT_IMAGE_COLUMN_SIZE = 8;
   static readonly INSTRUCTION_ROW_SIZE = 26;
@@ -87,8 +88,9 @@ export class InstructionSheetBuilder {
           const amari =
             instruction_index % InstructionSheetBuilder.INSTRUCTION_ROW_SIZE;
           if (amari === 0) {
-            if (instruction_index !== 0) {
+            if (currentRowNum !== 1) {
               currentRowNum += 3; // 指摘項目の最後の段の空欄分
+              addPageBreak(this.workSheet, currentRowNum);
             }
             // テンプレートをコピー
             copyRows(
@@ -113,7 +115,7 @@ export class InstructionSheetBuilder {
           nokori = nokori - amari;
         }
         // シート単位でテンプレートを切り替えるので残った分、currentRowNumに足す
-        currentRowNum += nokori + 2;
+        currentRowNum += nokori;
       }
     }
 

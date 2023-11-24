@@ -172,3 +172,11 @@ export const resizeImage = async (
     .jpeg({ mozjpeg: true })
     .toBuffer();
 };
+
+// 改ページを挿入する(印刷する時に期待しないところでページが切り替わってしまうのを防ぐために必要)
+export const addPageBreak = (
+  sheet: ExcelJS.Worksheet,
+  rowNum: number
+): void => {
+  sheet.getRow(rowNum).addPageBreak();
+};

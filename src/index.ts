@@ -15,8 +15,10 @@ async function main() {
     "./templates/instruction3.xlsx"
   );
   const workbook = new ExcelJS.Workbook();
-  const targetSheet = workbook.addWorksheet("Target Sheet");
-  const targetPhotoSheet = workbook.addWorksheet("Target Photo Sheet");
+  const targetSheet = workbook.addWorksheet("Target Sheet", { views: [{}] });
+  const targetPhotoSheet = workbook.addWorksheet("Target Photo Sheet", {
+    views: [{}],
+  });
   const sourceSheet = template.worksheets[0];
   const sourcePhotoSheet = template.worksheets[1];
   if (sourceSheet === undefined || sourcePhotoSheet === undefined) {

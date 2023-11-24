@@ -3,12 +3,12 @@
     {
       "id": 1,
       "orderName": "図面2.0邸",
-      "blueprintName": "A0の図面",
+      "blueprintName": "1枚目の図面",
       "thumbnailUrl": "https://user-images.githubusercontent.com/69618840/212257098-edd2f0a5-8c8d-4194-9d0f-50b4cea3327b.jpg",
       "sheets": [
         {
           "id": 1,
-          "sheetName": "田上電気用シートA0-1",
+          "sheetName": "1枚目の図面のシートA",
           "operationCategory": "設計検査",
           "instructions": [
             {
@@ -493,7 +493,7 @@
         },
         {
           "id": 1,
-          "sheetName": "手島電気用シートA0-1",
+          "sheetName": "1枚目の図面のシートB",
           "operationCategory": "設計検査",
           "instructions": [
             {
@@ -511,31 +511,31 @@
               "coordinateGraphics": "",
               "photos": [
                 {
-                  "displayId": 8,
+                  "displayId": 1,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 9,
+                  "displayId": 2,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 10,
+                  "displayId": 3,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 11,
+                  "displayId": 4,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 12,
+                  "displayId": 5,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 13,
+                  "displayId": 6,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 14,
+                  "displayId": 7,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 }
               ]
@@ -552,7 +552,7 @@
       "sheets": [
         {
           "id": 1,
-          "sheetName": "田上電気用シートA0-1",
+          "sheetName": "2枚目の図面のシートA",
           "operationCategory": "設計検査",
           "instructions": [
             {
@@ -570,31 +570,31 @@
               "coordinateGraphics": "",
               "photos": [
                 {
-                  "displayId": 8,
+                  "displayId": 1,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 9,
+                  "displayId": 2,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 10,
+                  "displayId": 3,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 11,
+                  "displayId": 4,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 12,
+                  "displayId": 5,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 13,
+                  "displayId": 6,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 14,
+                  "displayId": 7,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 }
               ]
@@ -603,7 +603,7 @@
         },
         {
           "id": 1,
-          "sheetName": "田上電気用シートA0-1",
+          "sheetName": "2枚目の図面のシートB",
           "operationCategory": "設計検査",
           "instructions": [
             {
@@ -621,31 +621,31 @@
               "coordinateGraphics": "",
               "photos": [
                 {
-                  "displayId": 8,
+                  "displayId": 1,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 9,
+                  "displayId": 2,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 10,
+                  "displayId": 3,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 11,
+                  "displayId": 4,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 12,
+                  "displayId": 5,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 13,
+                  "displayId": 6,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 },
                 {
-                  "displayId": 14,
+                  "displayId": 7,
                   "url": "https://user-images.githubusercontent.com/69618840/223367880-e2425953-0229-46ca-b0c9-a794be3ca669.jpeg"
                 }
               ]

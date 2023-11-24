@@ -1,6 +1,7 @@
 import ExcelJS from "exceljs";
 import { Blueprint, Sheet } from "./InstructionSheetBuilder";
 import {
+  addPageBreak,
   cellWidthHeightInPixel,
   copyRows,
   fetchImageAsBuffer,
@@ -33,15 +34,13 @@ export class InstructionPhotoSheetBuilder {
   ): Promise<this> {
     let currentRowNum = rowNum;
 
-    let photoIndex = 0;
     for (const blueprint of this.resources) {
       for (const sheet of blueprint.sheets) {
-        // ここでテンプレートの切り替えを行う、シート単位なので
-        // 案件名とかも埋める
+        let photoIndexBySheet = 0;
         for (const instruction of sheet.instructions) {
           for (const photo of instruction.photos) {
             if (
-              photoIndex %
+              photoIndexBySheet %
                 InstructionPhotoSheetBuilder.TOTAL_PHOTO_COUNT_PER_TEMPLATE ===
               0
             ) {
@@ -52,30 +51,30 @@ export class InstructionPhotoSheetBuilder {
                 32,
                 currentRowNum - 1
               );
+              if (currentRowNum !== 1) {
+                addPageBreak(this.workSheet, currentRowNum);
+              }
               currentRowNum += 1; // テンプレートの2行目がスタート位置
               this.fillBlueprintContents(currentRowNum, blueprint, sheet);
               currentRowNum += 2; // ヘッダー分2行追加
             }
 
-            // photoを3回はったらcurrentRowNumをインクリメント
-            // 6回目でテンプレートの延長が必要
-            // photosのカウントが行ったらテンプレートの延長が必要
             this.fillInstructionContents(
               currentRowNum,
               instruction.displayId,
               photo.displayId,
-              photoIndex
+              photoIndexBySheet
             );
             await this.pasteInstructionPhoto(
               currentRowNum + 1,
               photo.url,
               marginWidth,
               marginHeight,
-              photoIndex
+              photoIndexBySheet
             );
-            photoIndex++;
+            photoIndexBySheet++;
             if (
-              photoIndex %
+              photoIndexBySheet %
                 InstructionPhotoSheetBuilder.HORIZONTAL_PHOTO_COUNT ===
               0
             ) {
@@ -83,6 +82,18 @@ export class InstructionPhotoSheetBuilder {
             }
           }
         }
+        const temp =
+          photoIndexBySheet %
+          InstructionPhotoSheetBuilder.TOTAL_PHOTO_COUNT_PER_TEMPLATE;
+        if (temp !== 0) {
+          if (temp <= 3) {
+            currentRowNum += 28;
+          } else {
+            currentRowNum += 14;
+          }
+        }
+        // add page break
+        // addPageBreak(this.workSheet, currentRowNum);
       }
     }
     return this;
