@@ -1,13 +1,5 @@
 import { exit } from "process";
-import {
-  writeFileSync,
-  readFileSync,
-  unlinkSync,
-  existsSync,
-  mkdirSync,
-  unlink,
-  rmSync,
-} from "fs";
+import { writeFileSync, readFileSync, existsSync, mkdirSync, rmSync } from "fs";
 import {
   InstructionResource,
   InstructionResourceByClient,
@@ -58,7 +50,7 @@ async function main() {
   const zipPath = path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.zip`);
   await createZip(zipPath, paths);
 
-  const result = await storageService.uploadWithBytes(
+  await storageService.uploadWithBytes(
     readFileSync(zipPath),
     path.join("export", `${resource.exportId}`, path.basename(zipPath))
   );
