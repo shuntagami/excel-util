@@ -1,6 +1,4 @@
-import ExcelJS from "exceljs";
 import { exit } from "process";
-import { InstructionSheetBuilder } from "./service/InstructionSheetBuilder";
 import {
   writeFileSync,
   readFileSync,
@@ -8,73 +6,18 @@ import {
   existsSync,
   mkdirSync,
 } from "fs";
-import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBuilder";
 import {
   InstructionResource,
   InstructionResourceByClient,
 } from "./types/InstructionResource";
-import { createZip } from "./utils/excel_util";
+import {
+  createZip,
+  isInstructionResourceByClient,
+  loadJson,
+  processInstructionResource,
+} from "./utils/excel_util";
 import dayjs = require("dayjs");
 import path = require("node:path");
-
-const processInstructionResource = async (
-  instructionResource: InstructionResource,
-  instructionSheetName = "指摘一覧",
-  photoSheetName = "写真一覧"
-) => {
-  const workbook = new ExcelJS.Workbook();
-  const targetSheet = workbook.addWorksheet(instructionSheetName, {
-    views: [{}],
-  });
-  const targetPhotoSheet = workbook.addWorksheet(photoSheetName, {
-    views: [{}],
-  });
-
-  const template = await new ExcelJS.Workbook().xlsx.readFile(
-    "./templates/instruction.xlsx"
-  );
-  const sourceSheet = template.worksheets[0];
-  const sourcePhotoSheet = template.worksheets[1];
-  if (sourceSheet === undefined || sourcePhotoSheet === undefined) {
-    exit(1);
-  }
-
-  await new InstructionSheetBuilder(
-    workbook,
-    targetSheet,
-    sourceSheet,
-    instructionResource.blueprints
-  ).build();
-
-  await new InstructionPhotoSheetBuilder(
-    workbook,
-    targetPhotoSheet,
-    sourcePhotoSheet,
-    instructionResource.blueprints
-  ).build();
-
-  const data = new Uint8Array(await workbook.xlsx.writeBuffer());
-  return data;
-};
-
-const loadJson = (
-  rawData: string
-): InstructionResource | InstructionResourceByClient | null => {
-  try {
-    const data: InstructionResource | InstructionResourceByClient =
-      JSON.parse(rawData);
-    return data;
-  } catch (error) {
-    console.error("Error reading the file:", error);
-    return null;
-  }
-};
-
-const isInstructionResourceByClient = (
-  resource: any
-): resource is InstructionResourceByClient => {
-  return resource && "resources" in resource;
-};
 
 async function main() {
   // JSONファイルを読み込む

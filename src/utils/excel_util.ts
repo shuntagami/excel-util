@@ -3,6 +3,72 @@ import sharp from "sharp";
 import fs, { readFileSync } from "fs";
 import archiver from "archiver";
 import path = require("node:path");
+import {
+  InstructionResource,
+  InstructionResourceByClient,
+} from "../types/InstructionResource";
+import { InstructionSheetBuilder } from "../service/InstructionSheetBuilder";
+import { InstructionPhotoSheetBuilder } from "../service/InstructionPhotoSheetBuilder";
+import { exit } from "process";
+
+export const processInstructionResource = async (
+  instructionResource: InstructionResource,
+  instructionSheetName = "指摘一覧",
+  photoSheetName = "写真一覧"
+) => {
+  const workbook = new ExcelJS.Workbook();
+  const targetSheet = workbook.addWorksheet(instructionSheetName, {
+    views: [{}],
+  });
+  const targetPhotoSheet = workbook.addWorksheet(photoSheetName, {
+    views: [{}],
+  });
+
+  const template = await new ExcelJS.Workbook().xlsx.readFile(
+    "./templates/instruction.xlsx"
+  );
+  const sourceSheet = template.worksheets[0];
+  const sourcePhotoSheet = template.worksheets[1];
+  if (sourceSheet === undefined || sourcePhotoSheet === undefined) {
+    exit(1);
+  }
+
+  await new InstructionSheetBuilder(
+    workbook,
+    targetSheet,
+    sourceSheet,
+    instructionResource.blueprints
+  ).build();
+
+  await new InstructionPhotoSheetBuilder(
+    workbook,
+    targetPhotoSheet,
+    sourcePhotoSheet,
+    instructionResource.blueprints
+  ).build();
+
+  const data = new Uint8Array(await workbook.xlsx.writeBuffer());
+  return data;
+};
+
+export const loadJson = (
+  rawData: string
+): InstructionResource | InstructionResourceByClient | null => {
+  try {
+    const data: InstructionResource | InstructionResourceByClient =
+      JSON.parse(rawData);
+    return data;
+  } catch (error) {
+    console.error("Error reading the file:", error);
+    return null;
+  }
+};
+
+export const isInstructionResourceByClient = (
+  resource: any
+): resource is InstructionResourceByClient => {
+  return resource && "resources" in resource;
+};
 
 /**
  * 指定された範囲の行をソースシートからターゲットシートへコピーします。
