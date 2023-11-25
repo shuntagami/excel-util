@@ -29,7 +29,7 @@ export class InstructionPhotoSheetBuilder {
   }
 
   async build(
-    rowNum: number,
+    rowNum = 1,
     marginWidth = 100,
     marginHeight = 100
   ): Promise<this> {

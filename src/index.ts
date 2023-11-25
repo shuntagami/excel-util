@@ -38,14 +38,14 @@ const processInstructionResource = async (
     targetSheet,
     sourceSheet,
     instructionResource.blueprints
-  ).build(1);
+  ).build();
 
   await new InstructionPhotoSheetBuilder(
     workbook,
     targetPhotoSheet,
     sourcePhotoSheet,
     instructionResource.blueprints
-  ).build(1);
+  ).build();
 
   const data = new Uint8Array(await workbook.xlsx.writeBuffer());
   return data;
