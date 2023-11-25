@@ -7,8 +7,8 @@ import {
   InstructionResource,
   InstructionResourceByClient,
 } from "../types/InstructionResource";
-import { InstructionSheetBuilder } from "../service/InstructionSheetBuilder";
-import { InstructionPhotoSheetBuilder } from "../service/InstructionPhotoSheetBuilder";
+import { InstructionSheetBuilder } from "../service/excel/InstructionSheetBuilder";
+import { InstructionPhotoSheetBuilder } from "../service/excel/InstructionPhotoSheetBuilder";
 import { exit } from "process";
 
 export const processInstructionResource = async (

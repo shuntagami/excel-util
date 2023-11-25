@@ -6,9 +6,9 @@ import {
   fetchImageAsBuffer,
   pasteImageWithAspectRatio,
   resizeImage,
-} from "../utils/excel_util";
+} from "../../utils/excel_util";
 import dayjs from "dayjs";
-import { Blueprint, Instruction } from "../types/InstructionResource";
+import { Blueprint, Instruction } from "../../types/InstructionResource";
 
 export class InstructionSheetBuilder {
   static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 32;

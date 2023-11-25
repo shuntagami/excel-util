@@ -1,5 +1,5 @@
 import ExcelJS from "exceljs";
-import { Blueprint } from "../types/InstructionResource";
+import { Blueprint } from "../../types/InstructionResource";
 import {
   addPageBreak,
   cellWidthHeightInPixel,
@@ -7,7 +7,7 @@ import {
   fetchImageAsBuffer,
   pasteImageWithAspectRatio,
   resizeImage,
-} from "../utils/excel_util";
+} from "../../utils/excel_util";
 
 export class InstructionPhotoSheetBuilder {
   static readonly PHOTO_TEMPLATE_ROW_SIZE = 32;
