@@ -20,8 +20,8 @@ export class InstructionPhotoSheetBuilder {
   static readonly ROW_COUNT_FOR_PHOTO_CELL = 12;
 
   constructor(
-    public readonly workbook: ExcelJS.Workbook,
-    public readonly workSheet: ExcelJS.Worksheet,
+    private readonly workbook: ExcelJS.Workbook,
+    private readonly workSheet: ExcelJS.Worksheet,
     private readonly templateSheet: ExcelJS.Worksheet,
     private readonly resources: Blueprint[]
   ) {

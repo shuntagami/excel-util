@@ -17,8 +17,8 @@ export class InstructionSheetBuilder {
   static readonly INSTRUCTION_ROW_SIZE = 29;
 
   constructor(
-    public readonly workbook: ExcelJS.Workbook,
-    public readonly workSheet: ExcelJS.Worksheet,
+    private readonly workbook: ExcelJS.Workbook,
+    private readonly workSheet: ExcelJS.Worksheet,
     private readonly templateSheet: ExcelJS.Worksheet,
     private readonly resources: Blueprint[]
   ) {
