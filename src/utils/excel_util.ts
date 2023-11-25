@@ -242,7 +242,6 @@ export const resizeImage = async (
     .toBuffer();
 };
 
-// 改ページを挿入する(印刷する時に期待しないところでページが切り替わってしまうのを防ぐために必要)
 export const addPageBreak = (
   sheet: ExcelJS.Worksheet,
   rowNum: number
@@ -269,16 +268,13 @@ export const createZip = async (
       reject(err);
     });
 
-    // ZIPファイルのストリームに追加
     archive.pipe(output);
 
-    // 圧縮するファイルを追加
     files.forEach((file) => {
       const data = readFileSync(file);
       archive.append(data, { name: path.basename(file) });
     });
 
-    // アーカイブを完成させる
     archive.finalize();
   });
 };

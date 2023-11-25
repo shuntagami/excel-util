@@ -20,7 +20,6 @@ import dayjs = require("dayjs");
 import path = require("node:path");
 
 async function main() {
-  // JSONファイルを読み込む
   const rawJsonData = readFileSync(
     "./templates/resource_by_client.json",
     "utf8"
