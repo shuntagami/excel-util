@@ -78,7 +78,10 @@ const isInstructionResourceByClient = (
 
 async function main() {
   // JSONファイルを読み込む
-  const rawJsonData = readFileSync("./templates/resource.json", "utf8");
+  const rawJsonData = readFileSync(
+    "./templates/resource_by_client.json",
+    "utf8"
+  );
   const resource: InstructionResource | InstructionResourceByClient | null =
     loadJson(rawJsonData);
   if (resource === null) {
