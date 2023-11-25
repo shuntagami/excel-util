@@ -49,10 +49,9 @@ const processInstructionResource = async (
 };
 
 const loadJson = (
-  filePath: string
+  rawData: string
 ): InstructionResource | InstructionResourceByClient | null => {
   try {
-    const rawData = readFileSync(filePath, "utf8");
     const data: InstructionResource | InstructionResourceByClient =
       JSON.parse(rawData);
     return data;
@@ -76,8 +75,12 @@ const saveToTmpDir = (fileName: string, data: Uint8Array) => {
 
 async function main() {
   // JSONファイルを読み込む
+  const rawJsonData = readFileSync(
+    "./templates/resource_by_client.json",
+    "utf8"
+  );
   const resource: InstructionResource | InstructionResourceByClient | null =
-    loadJson("./templates/resource_by_client.json");
+    loadJson(rawJsonData);
   if (resource === null) {
     exit(1);
   }
