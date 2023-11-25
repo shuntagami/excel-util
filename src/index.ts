@@ -5,6 +5,8 @@ import {
   unlinkSync,
   existsSync,
   mkdirSync,
+  unlink,
+  rmSync,
 } from "fs";
 import {
   InstructionResource,
@@ -18,6 +20,7 @@ import {
 } from "./utils/excel_util";
 import dayjs = require("dayjs");
 import path = require("node:path");
+import { storageService } from "./service/s3";
 
 async function main() {
   const rawJsonData = readFileSync(
@@ -52,14 +55,15 @@ async function main() {
     paths.push(tmpPath);
     writeFileSync(tmpPath, data);
   }
-  await createZip(
-    path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.zip`),
-    paths
+  const zipPath = path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.zip`);
+  await createZip(zipPath, paths);
+
+  const result = await storageService.uploadWithBytes(
+    readFileSync(zipPath),
+    path.join("export", `${resource.exportId}`, path.basename(zipPath))
   );
 
-  paths.forEach((filePath) => {
-    unlinkSync(filePath);
-  });
+  rmSync(tmpDir, { recursive: true, force: true });
 }
 
 main().catch((error) => console.error(error));
