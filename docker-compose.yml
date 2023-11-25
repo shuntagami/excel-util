@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    # docker node Cannot find module '../build/Release/sharp-linux-arm64v8.node'の回避のため
+    platform: linux/x86_64
+    command: npm run dev
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000"
