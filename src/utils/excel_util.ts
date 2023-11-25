@@ -1,5 +1,8 @@
 import ExcelJS, { Anchor } from "exceljs";
 import sharp from "sharp";
+import fs, { readFileSync } from "fs";
+import archiver from "archiver";
+import path = require("node:path");
 
 /**
  * 指定された範囲の行をソースシートからターゲットシートへコピーします。
@@ -179,4 +182,37 @@ export const addPageBreak = (
   rowNum: number
 ): void => {
   sheet.getRow(rowNum).addPageBreak();
+};
+
+export const createZip = async (
+  zipFileName: string,
+  files: string[]
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(zipFileName);
+    const archive = archiver("zip", {
+      zlib: { level: 9 },
+      forceLocalTime: true,
+    });
+
+    output.on("close", () => {
+      resolve();
+    });
+
+    archive.on("error", (err) => {
+      reject(err);
+    });
+
+    // ZIPファイルのストリームに追加
+    archive.pipe(output);
+
+    // 圧縮するファイルを追加
+    files.forEach((file) => {
+      const data = readFileSync(file);
+      archive.append(data, { name: path.basename(file) });
+    });
+
+    // アーカイブを完成させる
+    archive.finalize();
+  });
 };

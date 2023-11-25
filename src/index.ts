@@ -1,17 +1,20 @@
 import ExcelJS from "exceljs";
 import { exit } from "process";
 import { InstructionSheetBuilder } from "./service/InstructionSheetBuilder";
-import { writeFileSync, readFileSync } from "fs";
+import { writeFileSync, readFileSync, unlinkSync } from "fs";
 import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBuilder";
 import {
   InstructionResource,
   InstructionResourceByClient,
 } from "./types/InstructionResource";
+import { createZip } from "./utils/excel_util";
+import dayjs = require("dayjs");
+import path = require("node:path");
 
 const processInstructionResource = async (
   instructionResource: InstructionResource,
-  instructionSheetName: string,
-  photoSheetName: string
+  instructionSheetName = "指摘一覧",
+  photoSheetName = "写真一覧"
 ) => {
   const workbook = new ExcelJS.Workbook();
   const targetSheet = workbook.addWorksheet(instructionSheetName, {
@@ -67,42 +70,41 @@ const isInstructionResourceByClient = (
   return resource && "resources" in resource;
 };
 
-const saveToTmpDir = (fileName: string, data: Uint8Array) => {
-  const dirPath = "./results";
-  const path = [dirPath, fileName].join("/");
-  writeFileSync(path, data);
-};
-
 async function main() {
   // JSONファイルを読み込む
-  const rawJsonData = readFileSync(
-    "./templates/resource_by_client.json",
-    "utf8"
-  );
+  const rawJsonData = readFileSync("./templates/resource.json", "utf8");
   const resource: InstructionResource | InstructionResourceByClient | null =
     loadJson(rawJsonData);
   if (resource === null) {
     exit(1);
   }
 
+  const paths: string[] = [];
   if (isInstructionResourceByClient(resource)) {
     for (const instructionResource of resource.resources) {
       const clientName = instructionResource.clientName;
-      const data = await processInstructionResource(
-        instructionResource,
-        "指摘一覧",
-        "写真一覧"
+      const data = await processInstructionResource(instructionResource);
+      const tmpPath = path.join(
+        "tmp",
+        `in_${clientName}_${dayjs().format("YYYYMMDD")}.xlsx`
       );
-      saveToTmpDir(`${clientName}_${Date.now()}.xlsx`, data);
+      paths.push(tmpPath);
+      writeFileSync(tmpPath, data);
     }
   } else {
-    const data = await processInstructionResource(
-      resource,
-      "指摘一覧",
-      "写真一覧"
-    );
-    saveToTmpDir(`${Date.now()}.xlsx`, data);
+    const data = await processInstructionResource(resource);
+    const tmpPath = path.join("tmp", `in_${dayjs().format("YYYYMMDD")}.xlsx`);
+    paths.push(tmpPath);
+    writeFileSync(tmpPath, data);
   }
+  await createZip(
+    path.join("tmp", `in_${dayjs().format("YYYYMMDD")}.zip`),
+    paths
+  );
+
+  paths.forEach((filePath) => {
+    unlinkSync(filePath);
+  });
 }
 
 main().catch((error) => console.error(error));
