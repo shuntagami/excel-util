@@ -1,7 +1,13 @@
 import ExcelJS from "exceljs";
 import { exit } from "process";
 import { InstructionSheetBuilder } from "./service/InstructionSheetBuilder";
-import { writeFileSync, readFileSync, unlinkSync } from "fs";
+import {
+  writeFileSync,
+  readFileSync,
+  unlinkSync,
+  existsSync,
+  mkdirSync,
+} from "fs";
 import { InstructionPhotoSheetBuilder } from "./service/InstructionPhotoSheetBuilder";
 import {
   InstructionResource,
@@ -78,6 +84,10 @@ async function main() {
   if (resource === null) {
     exit(1);
   }
+  const tmpDir = path.join("tmp", `${resource.exportId}`);
+  if (!existsSync(tmpDir)) {
+    mkdirSync(tmpDir);
+  }
 
   const paths: string[] = [];
   if (isInstructionResourceByClient(resource)) {
@@ -85,7 +95,7 @@ async function main() {
       const clientName = instructionResource.clientName;
       const data = await processInstructionResource(instructionResource);
       const tmpPath = path.join(
-        "tmp",
+        tmpDir,
         `in_${clientName}_${dayjs().format("YYYYMMDD")}.xlsx`
       );
       paths.push(tmpPath);
@@ -93,12 +103,12 @@ async function main() {
     }
   } else {
     const data = await processInstructionResource(resource);
-    const tmpPath = path.join("tmp", `in_${dayjs().format("YYYYMMDD")}.xlsx`);
+    const tmpPath = path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.xlsx`);
     paths.push(tmpPath);
     writeFileSync(tmpPath, data);
   }
   await createZip(
-    path.join("tmp", `in_${dayjs().format("YYYYMMDD")}.zip`),
+    path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.zip`),
     paths
   );
 
