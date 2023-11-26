@@ -1,8 +1,21 @@
 import type { SQSEvent } from "aws-lambda/trigger/sqs";
 import { storageService } from "../s3";
-import { Buffer } from "node:buffer";
-import { loadJson } from "../../utils/excel_util";
+import {
+  createZip,
+  isInstructionResourceByClient,
+  loadJson,
+  processInstructionResource,
+} from "../../utils/excel_util";
 import { QueueMessage } from "../../types/InstructionResource";
+import dayjs = require("dayjs");
+import path = require("node:path");
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 
 export class SQSEventService {
   /**
@@ -12,19 +25,48 @@ export class SQSEventService {
     const dequeuedMessages = this.mapEventToDequeuedMessages(event);
 
     const promises = dequeuedMessages.map(async (message) => {
-      try {
-        await this.processMessage(message);
-      } catch (error) {
-        // TODO: エラーハンドリング
-      }
+      await this.processMessage(message);
     });
+
     await Promise.all(promises);
   }
 
   private async processMessage(message: QueueMessage) {
-    const jsonString = JSON.stringify(message);
-    const buf = Buffer.from(jsonString);
-    await storageService.uploadWithBytes(buf, "sample2.json");
+    const tmpDir = path.join("tmp", `${message.exportId}`);
+    if (!existsSync(tmpDir)) {
+      mkdirSync(tmpDir);
+    }
+
+    const paths: string[] = [];
+    if (isInstructionResourceByClient(message)) {
+      for (const instructionResource of message.resources) {
+        const clientName = instructionResource.clientName;
+        const data = await processInstructionResource(instructionResource);
+        const tmpPath = path.join(
+          tmpDir,
+          `in_${clientName}_${dayjs().format("YYYYMMDD")}.xlsx`
+        );
+        paths.push(tmpPath);
+        writeFileSync(tmpPath, data);
+      }
+    } else {
+      const data = await processInstructionResource(message);
+      const tmpPath = path.join(
+        tmpDir,
+        `in_${dayjs().format("YYYYMMDD")}.xlsx`
+      );
+      paths.push(tmpPath);
+      writeFileSync(tmpPath, data);
+    }
+    const zipPath = path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.zip`);
+    await createZip(zipPath, paths);
+
+    await storageService.uploadWithBytes(
+      readFileSync(zipPath),
+      path.join("export", `${message.exportId}`, path.basename(zipPath))
+    );
+
+    rmSync(tmpDir, { recursive: true, force: true });
   }
 
   private mapEventToDequeuedMessages(event: SQSEvent): QueueMessage[] {
