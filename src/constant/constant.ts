@@ -1,5 +1,7 @@
 const env = process.env;
 
+export const APP_ENV = env["APP_ENV"];
+
 export const AWS_REGION = env["AWS_REGION"] as string;
 
 export const S3_BUCKET_NAME = env["S3_BUCKET_NAME"] as string;

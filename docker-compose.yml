@@ -6,6 +6,7 @@ services:
     platform: linux/x86_64
     command: npm run local
     environment:
+      APP_ENV: "local"
       AWS_REGION: "ap-northeast-1"
       AWS_ACCESS_KEY_ID: "sample"
       AWS_SECRET_ACCESS_KEY: "sample"
