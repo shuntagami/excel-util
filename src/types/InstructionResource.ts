@@ -1,3 +1,5 @@
+export type QueueMessage = InstructionResourceByClient | InstructionResource;
+
 // 業者ごとの出力resource
 export type InstructionResourceByClient = {
   exportId: number;
