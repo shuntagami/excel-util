@@ -9,7 +9,7 @@
     "format": "prettier --write src",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier --check src",
     "prebuild": "rm -rf dist",
-    "build": "tsc"
+    "build": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --external:sharp --target=es2020 --outfile=dist/index.js"
   },
   "author": "shuntagami",
   "license": "ISC",
