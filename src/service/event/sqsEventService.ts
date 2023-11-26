@@ -16,6 +16,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { blueprintAPIClient } from "../blueprintAPIClient";
 
 export class SQSEventService {
   /**
@@ -61,12 +62,18 @@ export class SQSEventService {
     const zipPath = path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.zip`);
     await createZip(zipPath, paths);
 
+    const exportId = message.exportId as number
+    const orderId = message.orderId as number
+
+    const s3Key = path.join("export", `${exportId}`, path.basename(zipPath))
     await storageService.uploadWithBytes(
       readFileSync(zipPath),
-      path.join("export", `${message.exportId}`, path.basename(zipPath))
+      s3Key
     );
 
     rmSync(tmpDir, { recursive: true, force: true });
+
+    blueprintAPIClient.updateExportStatus(exportId, orderId, 1, s3Key)
   }
 
   private mapEventToDequeuedMessages(event: SQSEvent): QueueMessage[] {

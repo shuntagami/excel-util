@@ -10,6 +10,8 @@ services:
       AWS_REGION: "ap-northeast-1"
       AWS_ACCESS_KEY_ID: "sample"
       AWS_SECRET_ACCESS_KEY: "sample"
+      BLUEPRINT_API_BASE_URL: ""
+      X_API_KEY: "dummy"
       S3_BUCKET_NAME: "shuntagami-demo-data"
       S3_ENDPOINT: http://s3:4566
     volumes:

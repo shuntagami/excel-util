@@ -2,6 +2,10 @@ const env = process.env;
 
 export const APP_ENV = env["APP_ENV"];
 
+export const X_API_KEY = env["X_API_KEY"] as string
+
+export const BLUEPRINT_API_BASE_URL = env["BLUEPRINT_API_BASE_URL"] as string
+
 export const AWS_REGION = env["AWS_REGION"] as string;
 
 export const S3_BUCKET_NAME = env["S3_BUCKET_NAME"] as string;
