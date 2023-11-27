@@ -4,6 +4,7 @@ import fs, { readFileSync } from 'fs'
 import archiver from 'archiver'
 import path = require('node:path')
 import {
+  type QueueMessage,
   type InstructionResource,
   type InstructionResourceByClient
 } from '../types/InstructionResource'
@@ -65,9 +66,9 @@ export const loadJson = (
 }
 
 export const isInstructionResourceByClient = (
-  resource: any
+  resource: QueueMessage
 ): resource is InstructionResourceByClient => {
-  return resource && 'resources' in resource
+  return typeof resource === 'object' && resource !== null && 'resources' in resource
 }
 
 /**
