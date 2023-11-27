@@ -18,6 +18,7 @@ import {
 } from "node:fs";
 import { blueprintAPIClient } from "../blueprintAPIClient";
 
+dayjs.locale('ja');
 export class SQSEventService {
   /**
    * Handles an sqs event by processing every message of it
@@ -39,27 +40,31 @@ export class SQSEventService {
     }
 
     const paths: string[] = [];
+
+    let baseFileName = "" // Excelやzipファイル名に使われる
     if (isInstructionResourceByClient(message)) {
+      baseFileName = `指摘事項一覧(A3)_${dayjs().format("YYYYMMDD_HHmm")}`
       for (const instructionResource of message.resources) {
         const clientName = instructionResource.clientName;
         const data = await processInstructionResource(instructionResource);
         const tmpPath = path.join(
           tmpDir,
-          `in_${clientName}_${dayjs().format("YYYYMMDD")}.xlsx`
+          `${clientName}_${baseFileName}.xlsx`
         );
         paths.push(tmpPath);
         writeFileSync(tmpPath, data);
       }
     } else {
+      baseFileName = `部屋別指摘事項一覧(A3)_${dayjs().format("YYYYMMDD_HHmm")}`
       const data = await processInstructionResource(message);
       const tmpPath = path.join(
         tmpDir,
-        `in_${dayjs().format("YYYYMMDD")}.xlsx`
+        `${baseFileName}.xlsx`
       );
       paths.push(tmpPath);
       writeFileSync(tmpPath, data);
     }
-    const zipPath = path.join(tmpDir, `in_${dayjs().format("YYYYMMDD")}.zip`);
+    const zipPath = path.join(tmpDir, `${baseFileName}.zip`)
     await createZip(zipPath, paths);
 
     const exportId = message.exportId as number

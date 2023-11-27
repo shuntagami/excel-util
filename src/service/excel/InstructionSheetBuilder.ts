@@ -10,6 +10,8 @@ import {
 import dayjs from "dayjs";
 import { Blueprint, Instruction } from "../../types/InstructionResource";
 
+dayjs.locale('ja');
+
 export class InstructionSheetBuilder {
   static readonly INSTRUCTION_TEMPLATE_ROW_SIZE = 32;
   static readonly BLUEPRINT_IMAGE_ROW_SIZE = 29;
