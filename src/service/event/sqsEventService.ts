@@ -33,6 +33,10 @@ export class SQSEventService {
     await Promise.all(promises);
   }
 
+  /**
+  * messageを使った指摘出力のメイン処理
+  * zipファイル生成、S3にアップロード、出力完了apiのコールまで行う
+  */
   private async processMessage(message: QueueMessage) {
     const tmpDir = path.join("tmp", `${message.exportId}`);
     if (!existsSync(tmpDir)) {
@@ -42,7 +46,7 @@ export class SQSEventService {
     const paths: string[] = [];
 
     let baseFileName = "" // Excelやzipファイル名に使われる
-    if (isInstructionResourceByClient(message)) {
+    if (isInstructionResourceByClient(message)) { // 業者ごとの出力
       baseFileName = `指摘事項一覧(A3)_${dayjs().format("YYYYMMDD_HHmm")}`
       for (const instructionResource of message.resources) {
         const clientName = instructionResource.clientName;
@@ -54,7 +58,7 @@ export class SQSEventService {
         paths.push(tmpPath);
         writeFileSync(tmpPath, data);
       }
-    } else {
+    } else { // not業者ごと(部屋別)
       baseFileName = `部屋別指摘事項一覧(A3)_${dayjs().format("YYYYMMDD_HHmm")}`
       const data = await processInstructionResource(message);
       const tmpPath = path.join(
@@ -71,13 +75,17 @@ export class SQSEventService {
     const orderId = message.orderId as number
 
     const s3Key = path.join("export", `${exportId}`, path.basename(zipPath))
+
+    // 完成したzipファイルをS3にアップロード
     await storageService.uploadWithBytes(
       readFileSync(zipPath),
       s3Key
     );
 
+    // 一時ファイル削除
     rmSync(tmpDir, { recursive: true, force: true });
 
+    // blueprint-apiをコールして、export.stateを1(succeed)に更新する
     blueprintAPIClient.updateExportStatus(exportId, orderId, 1, s3Key)
   }
 
