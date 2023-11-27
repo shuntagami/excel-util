@@ -16,7 +16,12 @@ if (APP_ENV === 'local') {
   storageService = new MockS3Service()
 } else {
   let credentials
-  if (AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {
+  if (AWS_ACCESS_KEY_ID === undefined || AWS_SECRET_ACCESS_KEY === undefined) {
+    credentials = {
+      accessKeyId: '',
+      secretAccessKey: ''
+    }
+  } else {
     credentials = {
       accessKeyId: AWS_ACCESS_KEY_ID,
       secretAccessKey: AWS_SECRET_ACCESS_KEY

@@ -23,7 +23,7 @@ export class SQSEventService {
   /**
    * Handles an sqs event by processing every message of it
    */
-  async handle (event: SQSEvent) {
+  async handle (event: SQSEvent): Promise<void> {
     const dequeuedMessages = this.mapEventToDequeuedMessages(event)
 
     const promises = dequeuedMessages.map(async (message) => {
@@ -37,7 +37,7 @@ export class SQSEventService {
   * messageを使った指摘出力のメイン処理
   * zipファイル生成、S3にアップロード、出力完了apiのコールまで行う
   */
-  private async processMessage (message: QueueMessage) {
+  private async processMessage (message: QueueMessage): Promise<void> {
     // /tmp is the only location we are allowed to write to in the Lambda environtment
     const tmpDir = path.join('/tmp', `${message.exportId}`)
     if (!existsSync(tmpDir)) {
@@ -87,7 +87,7 @@ export class SQSEventService {
     rmSync(tmpDir, { recursive: true, force: true })
 
     // blueprint-apiをコールして、export.stateを1(succeed)に更新する
-    blueprintAPIClient.updateExportStatus(exportId, orderId, 1, s3Key)
+    await blueprintAPIClient.updateExportStatus(exportId, orderId, 1, s3Key)
   }
 
   private mapEventToDequeuedMessages (event: SQSEvent): QueueMessage[] {

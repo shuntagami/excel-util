@@ -15,7 +15,7 @@ export const processInstructionResource = async (
   instructionResource: InstructionResource,
   instructionSheetName = '指摘一覧',
   photoSheetName = '写真一覧'
-) => {
+): Promise<Uint8Array> => {
   const workbook = new ExcelJS.Workbook()
   const targetSheet = workbook.addWorksheet(instructionSheetName, {
     views: [{}]
@@ -82,13 +82,13 @@ export const isInstructionResourceByClient = (
  * @param {number} targetStart コピー先のワークシートでの挿入開始行番号
  */
 // export async function copyRows(
-export const copyRows = async (
+export const copyRows = (
   targetSheet: ExcelJS.Worksheet,
   sourceSheet: ExcelJS.Worksheet,
   from: number,
   to: number,
   targetStart: number
-) => {
+): void => {
   const targetRowIndex = targetStart
   for (let i = from; i <= to; i++) {
     const sourceRow = sourceSheet.getRow(i)
@@ -97,9 +97,7 @@ export const copyRows = async (
     targetRow.height = sourceRow.height
     sourceRow.eachCell({ includeEmpty: true }, (cell, colNumber) => {
       const targetCell = targetRow.getCell(colNumber)
-      const width =
-        sourceSheet.getColumn(colNumber).width ||
-        sourceSheet.properties.defaultColWidth
+      const width = sourceSheet.getColumn(colNumber).width ?? sourceSheet.properties.defaultColWidth
       targetSheet.getColumn(colNumber).width = width
 
       targetCell.style = cell.style
@@ -107,20 +105,20 @@ export const copyRows = async (
 
       // merge cell
       if (cell.isMerged) {
-        if (cell.master != cell) return
+        if (cell.master !== cell) return
 
         let [colCount, rowCount] = [0, 0]
 
         for (let c = cell.fullAddress.col; ; c++) {
           const currentCell = cell.worksheet.getCell(cell.row, c)
-          if (currentCell.master != cell) break
+          if (currentCell.master !== cell) break
 
           colCount++
         }
 
         for (let r = cell.fullAddress.row; ; r++) {
           const currentCell = cell.worksheet.getCell(r, cell.col)
-          if (currentCell.master != cell) break
+          if (currentCell.master !== cell) break
 
           rowCount++
         }
@@ -151,7 +149,7 @@ export const pasteImageWithAspectRatio = (
   imageHeightP: number,
   colTl: number,
   rowTl: number
-) => {
+): void => {
   const [columnWidthP, rowHeightP] = cellWidthHeightInPixel(cell)
   const [offC, offR] = [
     (columnWidthP - imageWidthP) / 2,
@@ -187,20 +185,20 @@ export const cellWidthHeightInPixel = (
   for (let c = cell.fullAddress.col; ; c++) {
     const currentCell = cell.worksheet.getCell(cell.fullAddress.row, c)
     // マージの有無に関わらず、現在のセルの左上（master）が対象のセルである限り値を加算し続ける
-    if (currentCell.master != cell) break
+    if (currentCell.master !== cell) break
 
     // 初期値から列の横幅を変えてない場合に、値が取れない可能性があるたワークシート側のプロパティも参照
-    width += sheet.getColumn(c).width || sheet.properties.defaultColWidth || 0
+    width += sheet.getColumn(c).width ?? sheet.properties.defaultColWidth ?? 0
   }
 
   for (let r = cell.fullAddress.row; ; r++) {
     const currentCell = sheet.getCell(r, cell.col)
 
     // マージの有無に関わらず、現在のセルの左上（master）が対象のセルである限り値を加算し続ける
-    if (currentCell.master != cell) break
+    if (currentCell.master !== cell) break
 
     // 初期値から列の横幅を変えてない場合に、値が取れない可能性があるたワークシート側のプロパティも参照
-    height += sheet.getRow(r).height || sheet.properties.defaultRowHeight || 0
+    height += sheet.getRow(r).height ?? sheet.properties.defaultRowHeight ?? 0
   }
   return [columnWidthInPixel(width), rowHeightInPixel(height)]
 }
@@ -208,14 +206,14 @@ export const cellWidthHeightInPixel = (
 /**
  * get the column width in pixel.
  */
-const columnWidthInPixel = (width: number, fontWidth = 8) => {
+const columnWidthInPixel = (width: number, fontWidth = 8): number => {
   return ((256 * width + 128 / fontWidth) / 256) * fontWidth
 }
 
 /**
  * get the row height in pixel.
  */
-const rowHeightInPixel = (height: number) => {
+const rowHeightInPixel = (height: number): number => {
   //  Pixels DPI (96 pixels per inch), Points DPI (72 points per inch)
   return (height * 96) / 72
 }
@@ -235,7 +233,7 @@ export const resizeImage = async (
   buffer: Buffer,
   width: number,
   height: number
-) => {
+): Promise<Buffer> => {
   return await sharp(buffer)
     .resize(Math.trunc(width), Math.trunc(height), { fit: 'inside' })
     .jpeg({ mozjpeg: true })
@@ -253,7 +251,7 @@ export const createZip = async (
   zipFileName: string,
   files: string[]
 ): Promise<void> => {
-  await new Promise((resolve, reject) => {
+  await new Promise(async (resolve, reject) => {
     const output = fs.createWriteStream(zipFileName)
     const archive = archiver('zip', {
       zlib: { level: 9 },

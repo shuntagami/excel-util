@@ -111,7 +111,7 @@ export class InstructionPhotoSheetBuilder {
     blueprintName: string,
     operationCategory: string,
     sheetName: string
-  ) {
+  ): void {
     const row = this.workSheet.getRow(rowNum)
     row.getCell('A').value = orderName
     row.getCell('I').value = operationCategory
@@ -123,7 +123,7 @@ export class InstructionPhotoSheetBuilder {
     displayId: number,
     photoDisplayId: number,
     photoIndex: number
-  ) {
+  ): void {
     const columnMapping = ['A', 'H', 'O']
     const row = this.workSheet.getRow(rowNum)
     row.getCell(
@@ -139,7 +139,7 @@ export class InstructionPhotoSheetBuilder {
     marginWidth: number,
     marginHeight: number,
     photoIndex: number
-  ) {
+  ): Promise<void> {
     const columnMapping = ['A', 'H', 'O']
 
     const data = await fetchImageAsBuffer(url)

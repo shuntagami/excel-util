@@ -94,7 +94,7 @@ export class InstructionSheetBuilder {
     blueprintName: string,
     operationCategory: string,
     sheetName: string
-  ) {
+  ): void {
     const currentRow = this.workSheet.getRow(currentRowNum)
     const nextRow = this.workSheet.getRow(currentRowNum + 1)
 
@@ -109,7 +109,7 @@ export class InstructionSheetBuilder {
     url: string,
     marginWidth: number,
     marginHeight: number
-  ) {
+  ): Promise<void> {
     const data = await fetchImageAsBuffer(url)
     if (data === null) return
 
@@ -141,7 +141,7 @@ export class InstructionSheetBuilder {
   private fillInstructionContents (
     currentRowNum: number,
     instruction: Instruction
-  ) {
+  ): void {
     const currentRow = this.workSheet.getRow(currentRowNum)
     currentRow.getCell('I').value = instruction.displayId
     currentRow.getCell('J').value = instruction.room
