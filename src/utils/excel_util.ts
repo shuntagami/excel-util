@@ -260,10 +260,10 @@ export const createZip = async (
     })
 
     output.on('close', () => {
-      resolve()
+      resolve(undefined)
     })
 
-    archive.on('error', (err) => {
+    archive.on('error', (err: Error) => {
       reject(err)
     })
 
@@ -274,6 +274,6 @@ export const createZip = async (
       archive.append(data, { name: path.basename(file) })
     })
 
-    archive.finalize()
+    await archive.finalize()
   })
 }
