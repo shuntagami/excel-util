@@ -38,7 +38,8 @@ export class SQSEventService {
   * zipファイル生成、S3にアップロード、出力完了apiのコールまで行う
   */
   private async processMessage(message: QueueMessage) {
-    const tmpDir = path.join("tmp", `${message.exportId}`);
+    // /tmp is the only location we are allowed to write to in the Lambda environtment
+    const tmpDir = path.join("/tmp", `${message.exportId}`);
     if (!existsSync(tmpDir)) {
       mkdirSync(tmpDir);
     }
