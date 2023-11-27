@@ -1,3 +1,3 @@
-import { SQSEventService } from "./sqsEventService";
+import { SQSEventService } from './sqsEventService'
 
-export const EventService = new SQSEventService();
+export const EventService = new SQSEventService()

@@ -8,6 +8,7 @@
     "local": "node -e \"console.log(require('./dist/index').handler(require('./testdata/event.json')));\"",
     "format": "prettier --write src",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier --check src",
+    "fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier --check src",
     "build": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --external:sharp --target=es2020 --outfile=dist/index.js"
   },
   "author": "shuntagami",

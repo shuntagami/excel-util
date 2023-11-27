@@ -1,36 +1,36 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { S3Client } from '@aws-sdk/client-s3'
 import {
   APP_ENV,
   AWS_ACCESS_KEY_ID,
   AWS_REGION,
   AWS_SECRET_ACCESS_KEY,
-  S3_ENDPOINT,
-} from "./../../constant/constant";
-import type { StorageService } from "../../interface/storageService";
-import { S3Service } from "./s3Service";
-import { MockS3Service } from "./mockS3Service";
+  S3_ENDPOINT
+} from './../../constant/constant'
+import type { StorageService } from '../../interface/storageService'
+import { S3Service } from './s3Service'
+import { MockS3Service } from './mockS3Service'
 
-let storageService: StorageService;
+let storageService: StorageService
 
-if (APP_ENV === "local") {
-  storageService = new MockS3Service
+if (APP_ENV === 'local') {
+  storageService = new MockS3Service()
 } else {
-  let credentials = undefined;
+  let credentials
   if (AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {
     credentials = {
       accessKeyId: AWS_ACCESS_KEY_ID,
-      secretAccessKey: AWS_SECRET_ACCESS_KEY,
-    };
+      secretAccessKey: AWS_SECRET_ACCESS_KEY
+    }
   }
 
   const client = new S3Client({
-    credentials: credentials,
+    credentials,
     region: AWS_REGION,
     endpoint: S3_ENDPOINT,
-    forcePathStyle: true,
-  });
+    forcePathStyle: true
+  })
 
-  storageService = new S3Service(client);
+  storageService = new S3Service(client)
 }
 
-export { storageService };
+export { storageService }
