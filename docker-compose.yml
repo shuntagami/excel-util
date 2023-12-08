@@ -9,3 +9,7 @@ services:
     working_dir: /workspace/app
     ports:
       - "3001:3001"
+    ulimits:
+      nofile:
+        soft: 500
+        hard: 500

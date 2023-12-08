@@ -1,33 +1,33 @@
 import ExcelJS from "exceljs";
-import { exit } from "process";
-import { copyRows } from "./utils/excel_util";
-
-const fs = require("fs").promises;
+import { readFileSync } from "fs";
 
 async function main() {
-  const startRow = parseInt(process.argv[2] as string);
-  const endRow = parseInt(process.argv[3] as string);
-  const targetStartRow = parseInt(process.argv[4] as string);
-  const template = await new ExcelJS.Workbook().xlsx.readFile(
-    "./templates/template.xlsx"
-  );
   const workbook = new ExcelJS.Workbook();
   const targetSheet = workbook.addWorksheet("Target Sheet");
-  const sourceSheet = template.worksheets[0];
-  if (sourceSheet === undefined) {
-    exit(1);
+
+  for (let i = 0; i < 1000; i++) {
+    const imagePath = `images/image-${i}.jpeg`
+    console.log(imagePath);
+
+    const imageId = workbook.addImage({
+      filename: imagePath,
+      // buffer: readFileSync(imagePath),
+      extension: 'jpeg',
+    });
+    console.log(`image added to workbook, imageId: ${imageId}`);
+
+
+    targetSheet.addImage(imageId, {
+      tl: { col: 1, row: (i + 1)*3 },
+      ext: { width: 100, height: 100 }
+    });
+    console.log('image added to worksheet');
+
   }
-
-  const buffer = await copyRows(
-    targetSheet,
-    sourceSheet,
-    startRow,
-    endRow,
-    targetStartRow
-  );
-
   const path = `./results/${Date.now()}.xlsx`;
-  await fs.writeFile(path, buffer);
+  console.log(`writing data to ${path}`);
+
+  await workbook.xlsx.writeFile(path)
   console.log(`File written to ${path}`);
 }
 
