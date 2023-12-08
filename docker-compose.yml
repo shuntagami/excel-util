@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    command: npm run dev
+    volumes:
+      - .:/workspace
+    working_dir: /workspace/app
+    ports:
+      - "3001:3001"
