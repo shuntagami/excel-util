@@ -11,5 +11,5 @@ services:
       - "3001:3001"
     ulimits:
       nofile:
-        soft: 500
-        hard: 500
+        soft: 1000
+        hard: 1000

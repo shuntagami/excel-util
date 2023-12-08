@@ -1,27 +1,28 @@
 import ExcelJS from "exceljs";
 import { readFileSync } from "fs";
+import { execSync } from 'child_process';
 
 async function main() {
   const workbook = new ExcelJS.Workbook();
+  const stdout = execSync('ulimit -n').toString().trim();
+  const ulimitN = parseInt(stdout, 10);
+  console.log(ulimitN);
+
   const targetSheet = workbook.addWorksheet("Target Sheet");
 
   for (let i = 0; i < 1000; i++) {
     const imagePath = `images/image-${i}.jpeg`
-    console.log(imagePath);
 
     const imageId = workbook.addImage({
       filename: imagePath,
       // buffer: readFileSync(imagePath),
       extension: 'jpeg',
     });
-    console.log(`image added to workbook, imageId: ${imageId}`);
-
 
     targetSheet.addImage(imageId, {
       tl: { col: 1, row: (i + 1)*3 },
       ext: { width: 100, height: 100 }
     });
-    console.log('image added to worksheet');
 
   }
   const path = `./results/${Date.now()}.xlsx`;
