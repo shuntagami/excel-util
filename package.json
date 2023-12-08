@@ -19,6 +19,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "exceljs": "^4.4.0"
+    "exceljs": "git+https://git@github.com/shuntagami/exceljs.git"
   }
 }
